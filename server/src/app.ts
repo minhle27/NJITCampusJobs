@@ -6,6 +6,8 @@ import morgan from "morgan";
 import "express-async-errors";
 import config from "./utils/config";
 
+import unknownEndpoint from "./middleware/unknownEndpoints";
+
 const app = express();
 
 // MONGODB connection
@@ -28,5 +30,7 @@ app.use(express.json());
 app.use(cors());
 app.use(helmet());
 app.use(morgan("common"));
+
+app.use(unknownEndpoint);
 
 export default app;

@@ -1,11 +1,17 @@
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Login from "./Components/Authentication/Login.tsx";
 import "./App.css";
 
 const App = () => {
   return (
     <>
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
+      <Router>
+        <Routes>
+          <Route path="/auth" element={<Login />} />
+        </Routes>
+      </Router>
     </>
   );
-}
+};
 
 export default App;

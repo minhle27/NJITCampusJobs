@@ -1,6 +1,6 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import logo from "../../assets/NJIT Campus Job-logos_transparent.svg";
+import logo from "../../../assets/NJIT Campus Job-logos_transparent.svg";
 interface InputForm {
   email: string;
   password: string;

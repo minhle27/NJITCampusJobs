@@ -13,7 +13,12 @@ const Login = () => {
       password: "",
     },
     validationSchema: Yup.object({
-      email: Yup.string().required("Enter a valid email"),
+      email: Yup.string()
+        .required("Please enter a valid email")
+        .matches(
+          /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
+          "Please enter a valid email"
+        ),
       password: Yup.string().required(
         "Please enter the password for your NCJ account"
       ),

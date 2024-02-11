@@ -63,6 +63,27 @@ const Register = () => {
           onSubmit={formik.handleSubmit}
         >
           <div className="flex flex-col justify-center items-center">
+            <select
+              name="accType"
+              id="accType"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.accType}
+              className="rounded-full py-2 px-5 w-4/5 mx-8 bg-gray-200 hover:bg-gray-300 placeholder:text-center text-lg"
+            >
+              <option value="" hidden>
+                Choose account type
+              </option>
+              <option value="Student">Student</option>
+              <option value="Employer">Employer</option>
+            </select>
+            <div className="h-10 w-4/5 ml-8 pl-1 flex justify-start items-center">
+              {formik.errors.accType && formik.touched.accType ? (
+                <div className="text-red-500 align-middle flex-initial">
+                  {formik.errors.accType}
+                </div>
+              ) : null}
+            </div>
             <input
               className="rounded-full py-2 px-5 w-4/5 mx-8 bg-gray-200 hover:bg-gray-300 placeholder:text-center text-lg"
               placeholder="Email"

@@ -115,7 +115,7 @@ const studentSchema = new mongoose.Schema(
     accountType: {
       type: String,
       enum: {
-        values: ["student", "employer"],
+        values: ["student"],
         message: "Invalid account type",
       },
       required: true,
@@ -162,7 +162,7 @@ studentSchema.plugin(uniqueValidator, {
 
 studentSchema.set("toJSON", {
   transform: (_document, returnedObject) => {
-    if ('_id' in returnedObject && typeof returnedObject._id === 'string') {
+    if ("_id" in returnedObject && typeof returnedObject._id === "string") {
       returnedObject.id = returnedObject._id.toString();
     }
     // the passwordHash should not be revealed

@@ -1,6 +1,8 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import logo from "../../../assets/NJIT Campus Job-logos_transparent.svg";
+import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
+import { useState } from "react";
 
 interface InputFormReg {
   accType: string;
@@ -10,6 +12,8 @@ interface InputFormReg {
 }
 
 const Register = () => {
+  const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
+
   const formik = useFormik<InputFormReg>({
     initialValues: {
       accType: "Choose account type",
@@ -69,7 +73,7 @@ const Register = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.accType}
-              className="rounded-full py-2 px-5 w-4/5 mx-8 bg-gray-200 hover:bg-gray-300 placeholder:text-center text-lg"
+              className="rounded-full py-2 pl-4 w-4/5 mx-8 bg-gray-200 hover:bg-gray-300 placeholder:text-center text-lg text-center focus:outline-0"
             >
               <option value="" hidden>
                 Choose account type
@@ -85,7 +89,7 @@ const Register = () => {
               ) : null}
             </div>
             <input
-              className="rounded-full py-2 px-5 w-4/5 mx-8 bg-gray-200 hover:bg-gray-300 placeholder:text-center text-lg"
+              className="rounded-full py-2 px-5 w-4/5 mx-8 bg-gray-200 hover:bg-gray-300 placeholder:text-center text-lg text-center focus:outline-0"
               placeholder="Email"
               id="email"
               name="email"
@@ -100,15 +104,24 @@ const Register = () => {
                 </div>
               ) : null}
             </div>
-            <input
-              className="rounded-full py-2 px-5 w-4/5 mx-8 bg-gray-200 hover:bg-gray-300 placeholder:text-center text-lg"
-              placeholder="Password"
-              id="password"
-              name="password"
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.password}
-            />
+            <div className="rounded-full bg-gray-200 w-4/5 mx-8 hover:bg-gray-300 text-xl flex justify-between items-center">
+              <input
+                className="py-2 ml-10 border-none text-center placeholder:text-center text-lg w-full bg-transparent focus:outline-0"
+                placeholder="Password"
+                type={passwordVisible ? "text" : "password"}
+                id="password"
+                name="password"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.password}
+              />
+              <div
+                className="px-2 pb-2 cursor-pointer"
+                onClick={() => setPasswordVisible(!passwordVisible)}
+              >
+                {passwordVisible ? <EyeOutlined /> : <EyeInvisibleOutlined />}
+              </div>
+            </div>
             <div className="h-10 w-4/5 ml-8 pl-1 flex justify-start items-center">
               {formik.errors.password && formik.touched.password ? (
                 <div className="text-red-500 align-middle flex-initial">
@@ -117,7 +130,7 @@ const Register = () => {
               ) : null}
             </div>
             <input
-              className="rounded-full py-2 px-5 w-4/5 mx-8 bg-gray-200 hover:bg-gray-300 placeholder:text-center text-lg"
+              className="rounded-full py-2 px-5 w-4/5 mx-8 bg-gray-200 hover:bg-gray-300 placeholder:text-center text-lg text-center focus:outline-0"
               placeholder="Full Name"
               id="name"
               name="name"

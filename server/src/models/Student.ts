@@ -109,7 +109,7 @@ const studentSchema = new mongoose.Schema(
     },
     degree: {
       type: String,
-      min: [2, "must be at least 2 characters"],
+      minlength: [2, "must be at least 2 characters"],
       required: true,
     },
     accountType: {
@@ -164,6 +164,7 @@ studentSchema.set("toJSON", {
   transform: (_document, returnedObject) => {
     if ("_id" in returnedObject && typeof returnedObject._id === "string") {
       returnedObject.id = returnedObject._id.toString();
+      delete returnedObject._id;
     }
     // the passwordHash should not be revealed
     delete returnedObject.password;

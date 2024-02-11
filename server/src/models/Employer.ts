@@ -33,6 +33,12 @@ const employerSchema = new mongoose.Schema(
           `${props.value} is not a valid phone number!`,
       },
     },
+    department: {
+      type: String,
+      required: true,
+      maxlength: [100, "Must be 100 characters or less"],
+      minlength: [2, "Must be at least 2 characters"],
+    },
     profileDescription: {
       type: String,
       maxlength: [279, "Must be 279 characters or less"],
@@ -81,6 +87,7 @@ employerSchema.set("toJSON", {
   transform: (_document, returnedObject) => {
     if ("_id" in returnedObject && typeof returnedObject._id === "string") {
       returnedObject.id = returnedObject._id.toString();
+      delete returnedObject._id;
     }
     // the passwordHash should not be revealed
     delete returnedObject.password;

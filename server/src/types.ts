@@ -1,13 +1,13 @@
-interface User {
+export interface BaseUser {
   password: string;
   email: string;
-  fullname: string;
+  fullName: string;
   phone: string;
   profileDescription?: string;
   profilePicture?: string;
 }
 
-export interface Student extends User {
+export interface Student extends BaseUser {
   accountType: "student";
   classYear: {
     start: number;
@@ -19,7 +19,9 @@ export interface Student extends User {
   major: string;
 }
 
-export interface Employer extends User {
+export interface Employer extends BaseUser {
   accountType: "employer";
   department: string;
 }
+
+export type User = Student | Employer;

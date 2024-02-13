@@ -76,13 +76,8 @@ const studentSchema = new mongoose.Schema(
         required: true,
         validate: {
           validator: function (this, value: number) {
-            const currentYear = new Date().getFullYear();
             if (this && "classYear" in this) {
-              return (
-                value >= 2000 &&
-                value <= currentYear &&
-                value >= this.classYear.start
-              );
+              return value >= 2000 && value >= this.classYear.start;
             }
             return false;
           },

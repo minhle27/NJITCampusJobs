@@ -5,6 +5,17 @@ import { isEmail } from "validator";
 
 type studentSchemaInferType = InferSchemaType<typeof studentSchema>;
 
+const fileSchema = new mongoose.Schema({
+  fileUrl: {
+    type: String,
+    default: "",
+  },
+  cloudinaryId: {
+    type: String,
+    default: "",
+  },
+});
+
 const studentSchema = new mongoose.Schema(
   {
     password: {
@@ -39,36 +50,9 @@ const studentSchema = new mongoose.Schema(
       type: String,
       maxlength: [279, "Must be 279 characters or less"],
     },
-    profilePicture: {
-      fileUrl: {
-        type: String,
-        default: "",
-      },
-      cloudinaryId: {
-        type: String,
-        default: "",
-      },
-    },
-    resume: {
-      fileUrl: {
-        type: String,
-        default: "",
-      },
-      cloudinaryId: {
-        type: String,
-        default: "",
-      },
-    },
-    transcript: {
-      fileUrl: {
-        type: String,
-        default: "",
-      },
-      cloudinaryId: {
-        type: String,
-        default: "",
-      },
-    },
+    profilePicture: fileSchema,
+    resume: [fileSchema],
+    transcript: fileSchema,
     major: {
       type: String,
       required: true,

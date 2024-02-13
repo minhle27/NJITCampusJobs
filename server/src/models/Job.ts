@@ -2,6 +2,16 @@ import mongoose from "mongoose";
 import uniqueValidator from "mongoose-unique-validator";
 import { InferSchemaType } from "mongoose";
 
+const applicationSchema = new mongoose.Schema({
+  student: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Student",
+  },
+  resumeUrl: {
+    type: String,
+  },
+});
+
 const jobSchema = new mongoose.Schema(
   {
     employer: {
@@ -35,24 +45,9 @@ const jobSchema = new mongoose.Schema(
       minlength: [3, "Must be at least 3 characters."],
     },
     applicants: {
-      accepted: [
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Student",
-        },
-      ],
-      pending: [
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Student",
-        },
-      ],
-      rejected: [
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Student",
-        },
-      ],
+      accepted: [applicationSchema],
+      pending: [applicationSchema],
+      rejected: [applicationSchema],
     },
     salary: {
       type: Number,

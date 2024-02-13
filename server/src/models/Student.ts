@@ -25,15 +25,15 @@ const studentSchema = new mongoose.Schema(
     phone: {
       type: String,
       required: [true, "User phone number required"],
-      validate: {
-        validator: (value: string) => {
-          const phoneRegex = /^\d{10}$/;
+      // validate: {
+      //   validator: (value: string) => {
+      //     const phoneRegex = /^\d{10}$/;
 
-          return phoneRegex.test(value);
-        },
-        message: (props: { value: string }) =>
-          `${props.value} is not a valid phone number!`,
-      },
+      //     return phoneRegex.test(value);
+      //   },
+      //   message: (props: { value: string }) =>
+      //     `${props.value} is not a valid phone number!`,
+      // },
     },
     profileDescription: {
       type: String,

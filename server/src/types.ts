@@ -25,3 +25,9 @@ export interface Employer extends BaseUser {
 }
 
 export type User = Student | Employer;
+
+export interface LoginInfo {
+  email: string;
+  password: string;
+  accountType: string;
+}

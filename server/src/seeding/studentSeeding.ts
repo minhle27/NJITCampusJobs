@@ -27,6 +27,18 @@ async function seedStudents() {
         fullName: faker.name.findName(),
         phone: faker.phone.phoneNumberFormat().replace(/-/g, ""),
         profileDescription: faker.lorem.sentence(),
+        profilePicture:{
+          fileUrl: 'https://res.cloudinary.com/ddjybuw16/image/upload/v1707926230/Test/avatarMabu.png',
+          cloudinaryId: 'Test/avatarMabu.png'
+        }, 
+        resume: {
+          fileUrl: 'https://res.cloudinary.com/ddjybuw16/image/upload/v1707926556/Test/resume.pdf',
+          cloudinaryId: 'Test/resume.pdf'
+        },
+        transcript:{
+          fileUrl: 'https://res.cloudinary.com/ddjybuw16/image/upload/v1707926808/Test/transcript.pdf',
+          cloudinaryId: 'Test/transcript.pdf'
+        },
         major: faker.lorem.words(10),
         classYear: {
           start: startYear,

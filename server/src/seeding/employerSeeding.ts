@@ -15,7 +15,7 @@ async function seedEmployers() {
 
     const seedCounts = 1;
     const employers = [];
-    const hashedPassword = await bcrypt.hash("Minhle279", 10)
+    const hashedPassword = await bcrypt.hash("Minhle279#", 10)
 
     for (let i = 0; i < seedCounts; i++) {
 

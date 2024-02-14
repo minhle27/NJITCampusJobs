@@ -29,15 +29,18 @@ async function seedStudents() {
         profileDescription: faker.lorem.sentence(),
         profilePicture:{
           fileUrl: 'https://res.cloudinary.com/ddjybuw16/image/upload/v1707926230/Test/avatarMabu.png',
-          cloudinaryId: 'Test/avatarMabu.png'
+          cloudinaryId: 'Test/avatarMabu.png',
+          isDefault: false,
         }, 
         resume: {
           fileUrl: 'https://res.cloudinary.com/ddjybuw16/image/upload/v1707926556/Test/resume.pdf',
-          cloudinaryId: 'Test/resume.pdf'
+          cloudinaryId: 'Test/resume.pdf',
+          isDefault: false,
         },
         transcript:{
           fileUrl: 'https://res.cloudinary.com/ddjybuw16/image/upload/v1707926808/Test/transcript.pdf',
-          cloudinaryId: 'Test/transcript.pdf'
+          cloudinaryId: 'Test/transcript.pdf',
+          isDefault: false,
         },
         major: faker.lorem.words(10),
         classYear: {

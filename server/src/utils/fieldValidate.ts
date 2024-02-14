@@ -1,4 +1,4 @@
-import { User } from "../types";
+import { User, LoginInfo } from "../types";
 import { isEmail } from "validator";
 
 const isString = (text: unknown): text is string => {
@@ -125,6 +125,21 @@ const fieldValidate = {
       default:
         throw new Error(`Incorrect type: ${object.accountType}`);
     }
+  },
+  processLoginInfo: (object: unknown): LoginInfo => {
+    if (!object || typeof object !== "object") {
+      throw new Error("Incorrect or missing data");
+    }
+    if (!("accountType" in object)) throw new Error("account type missing");
+    if (!("password" in object)) throw new Error("password missing");
+    if (!("email" in object)) throw new Error("email missing");
+    if (object.accountType !== "student" && object.accountType !== "employer")
+      throw new Error("invalid account type");
+    return {
+      email: parseEmail(object.email),
+      password: parsePassword(object.password),
+      accountType: object.accountType,
+    };
   },
 };
 

@@ -5,6 +5,7 @@ dotenv.config();
 
 const PORT = process.env.PORT;
 const MONGODB_URI = process.env.MONGODB_URI;
+const SECRET = process.env.SECRET;
 
 cloudinary.v2.config({
   cloud_name: process.env.CLOUDINARY_NAME,
@@ -15,5 +16,6 @@ cloudinary.v2.config({
 export default {
   MONGODB_URI,
   PORT,
+  SECRET,
   cloudinary: cloudinary.v2,
 };

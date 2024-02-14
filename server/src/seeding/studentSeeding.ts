@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import studentModel from "../models/Student";
 const faker = require("faker");
+import bcrypt from "bcrypt";
 //import config from "../utils/config";
 
 async function seedStudents() {
@@ -14,13 +15,14 @@ async function seedStudents() {
 
     const seedCounts = 1;
     const students = [];
+    const hashedPassword = await bcrypt.hash("Minhle279", 10)
 
     for (let i = 0; i < seedCounts; i++) {
       const startYear = faker.date.past(5).getFullYear();
       const endYear = faker.date.between(startYear, 2024).getFullYear();
 
       const student = {
-        password: faker.internet.password(),
+        password: hashedPassword,
         email: faker.internet.email(),
         fullName: faker.name.findName(),
         phone: faker.phone.phoneNumberFormat().replace(/-/g, ""),

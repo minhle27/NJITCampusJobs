@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import EmployerModel from "../models/Employer";
 const faker = require("faker");
+import bcrypt from "bcrypt";
 //import config from "../utils/config";
 
 async function seedEmployers() {
@@ -14,11 +15,12 @@ async function seedEmployers() {
 
     const seedCounts = 1;
     const employers = [];
+    const hashedPassword = await bcrypt.hash("Minhle279", 10)
 
     for (let i = 0; i < seedCounts; i++) {
 
       const employer = {
-        password: faker.internet.password(),
+        password: hashedPassword,
         email: faker.internet.email(),
         fullName: faker.name.findName(),
         phone: faker.phone.phoneNumberFormat().replace(/-/g, ""),

@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import uniqueValidator from "mongoose-unique-validator";
 import { InferSchemaType } from "mongoose";
 import { isEmail } from "validator";
+import { fileSchema } from "./Student";
 
 const employerSchema = new mongoose.Schema(
   {
@@ -43,16 +44,7 @@ const employerSchema = new mongoose.Schema(
       type: String,
       maxlength: [279, "Must be 279 characters or less"],
     },
-    profilePicture: {
-      fileUrl: {
-        type: String,
-        default: "",
-      },
-      cloudinaryId: {
-        type: String,
-        default: "",
-      },
-    },
+    profilePicture: fileSchema,
     jobPosts: [
       {
         type: mongoose.Schema.Types.ObjectId,

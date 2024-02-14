@@ -5,7 +5,7 @@ import { isEmail } from "validator";
 
 type studentSchemaInferType = InferSchemaType<typeof studentSchema>;
 
-const fileSchema = new mongoose.Schema({
+export const fileSchema = new mongoose.Schema({
   fileUrl: {
     type: String,
     default: "",
@@ -13,6 +13,10 @@ const fileSchema = new mongoose.Schema({
   cloudinaryId: {
     type: String,
     default: "",
+  },
+  isDefault: {
+    type: Boolean,
+    default: true,
   },
 });
 

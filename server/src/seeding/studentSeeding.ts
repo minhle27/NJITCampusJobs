@@ -15,7 +15,7 @@ async function seedStudents() {
 
     const seedCounts = 1;
     const students = [];
-    const hashedPassword = await bcrypt.hash("Minhle279", 10)
+    const hashedPassword = await bcrypt.hash("Minhle279#", 10)
 
     for (let i = 0; i < seedCounts; i++) {
       const startYear = faker.date.past(5).getFullYear();

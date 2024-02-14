@@ -79,8 +79,6 @@ jobSchema.set("toJSON", {
       returnedObject.id = returnedObject._id.toString();
       delete returnedObject._id;
     }
-    // the passwordHash should not be revealed
-    delete returnedObject.password;
   },
 });
 

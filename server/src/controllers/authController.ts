@@ -4,7 +4,8 @@ import studentModel from "../models/Student";
 import employerModel from "../models/Employer";
 import { Request, Response } from "express";
 import { uploadCloudinary } from "../utils/helpers";
-// import jwt from "jsonwebtoken";
+import config from "../utils/config";
+import jwt from "jsonwebtoken";
 
 const authController = {
   register: async (req: Request, res: Response) => {
@@ -65,10 +66,49 @@ const authController = {
         const savedEmployer = await newEmployer.save();
         return res.status(200).json(savedEmployer);
       }
+      default:
+        return res
+          .status(500)
+          .json({ error: "User Type is missing or invalid" });
     }
   },
 
-  login: async (_req: Request, _res: Response) => {},
+  login: async (req: Request, res: Response) => {
+    const { email, password, accountType } = fieldValidate.processLoginInfo(
+      req.body
+    );
+    let user;
+    switch (accountType) {
+      case "Student": {
+        user = await studentModel.findOne({ email });
+        break;
+      }
+      case "Employer": {
+        user = await employerModel.findOne({ email });
+        break;
+      }
+      default:
+        return res
+          .status(500)
+          .json({ error: "User Type is missing or invalid" });
+    }
+    const passwordCorrect =
+      user === null ? false : await bcrypt.compare(password, user.password);
+
+    if (!(user && passwordCorrect)) {
+      return res.status(401).json({
+        error: "invalid username or password",
+      });
+    }
+
+    const userForToken = {
+      email: user.email,
+      id: user._id,
+    };
+
+    const token = jwt.sign(userForToken, config.SECRET as string);
+    return res.status(200).send({ token, user });
+  },
 };
 
 export default authController;

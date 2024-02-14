@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "mongoose-unique-validator": "^5.0.0",
+    "validator": "^13.11.0"
+  },
+  "devDependencies": {
+    "@types/faker": "^6.6.9",
+    "@types/mongoose-unique-validator": "^1.0.9",
+    "faker": "^5.5.3"
+  }
+}

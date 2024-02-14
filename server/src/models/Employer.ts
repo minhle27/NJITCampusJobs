@@ -44,7 +44,14 @@ const employerSchema = new mongoose.Schema(
       type: String,
       maxlength: [279, "Must be 279 characters or less"],
     },
-    profilePicture: fileSchema,
+    profilePicture: {
+      type: fileSchema,
+      default: {
+        fileUrl: "https://res.cloudinary.com/ddjybuw16/image/upload/v1707930194/Test/blankProfile.png",
+        cloudinaryId: "Test/blankProfile.png",
+        isDefault: true,
+      },
+    },
     jobPosts: [
       {
         type: mongoose.Schema.Types.ObjectId,

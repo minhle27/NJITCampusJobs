@@ -10,6 +10,12 @@ const isPhone = (phone: string): boolean => {
   return phoneRegex.test(phone);
 };
 
+const isPassword = (password: string): boolean => {
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  return passwordRegex.test(password);
+};
+
 const isNumber = (value: unknown): value is number => {
   return !isNaN(Number(value));
 };
@@ -63,20 +69,26 @@ const parseClassYear = (classYear: unknown): classYearType => {
   };
 };
 
+const parsePassword = (password: unknown): string => {
+  if (!isString(password) || !isPassword(password))
+    throw new Error(`Invalid phone number: ${password}`);
+  return password;
+};
+
 const fieldValidate = {
   processNewUser: (object: unknown): User => {
     if (!object || typeof object !== "object") {
       throw new Error("Incorrect or missing data");
     }
 
-    if (!("accountType" in object)) throw new Error("password missing");
+    if (!("accountType" in object)) throw new Error("account type missing");
     if (!("password" in object)) throw new Error("password missing");
     if (!("email" in object)) throw new Error("email missing");
     if (!("fullName" in object)) throw new Error("fullName missing");
     if (!("phone" in object)) throw new Error("phone missing");
 
     const newUser = {
-      password: parseString(object.password, "password"),
+      password: parsePassword(object.password),
       email: parseEmail(object.email),
       fullName: parseString(object.fullName, "fullName"),
       phone: parsePhone(object.phone),

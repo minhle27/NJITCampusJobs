@@ -77,12 +77,12 @@ const studentSchema = new mongoose.Schema(
         validate: {
           validator: function (this, value: number) {
             if (this && "classYear" in this) {
-              return value >= 2000 && value >= this.classYear.start;
+              return value >= this.classYear.start;
             }
             return false;
           },
           message:
-            "Invalid end year. Must be between 2000 and the current year and greater than start year.",
+            "Invalid end year. Must be greater than start year.",
         },
       },
     },

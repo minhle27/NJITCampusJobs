@@ -3,18 +3,22 @@ import * as Yup from "yup";
 import logo from "../../../assets/NJIT Campus Job-logos_transparent.svg";
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 import { useState } from "react";
+import axios from "axios";
 interface InputForm {
   email: string;
   password: string;
+  accountType: string;
 }
 
 const Login = () => {
+  const endpoint = "";
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
 
   const formik = useFormik<InputForm>({
     initialValues: {
       email: "",
       password: "",
+      accountType: "Choose account type",
     },
     validationSchema: Yup.object({
       email: Yup.string()
@@ -26,15 +30,22 @@ const Login = () => {
       password: Yup.string().required(
         "Please enter the password for your NCJ account"
       ),
+      accountType: Yup.string().matches(
+        /Student|Employer/,
+        "Please choose account type"
+      ),
     }),
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: (value) => {
+      axios
+        .post(endpoint, value)
+        .then((res) => console.log(res))
+        .catch((err) => console.error(err));
     },
   });
 
   return (
     <div className="font-montserat flex justify-center items-center h-screen">
-      <section className="w-5/12 bg-gradient-to-b from-cyan-500 h-full flex items-center">
+      <section className="w-5/12 bg-gradient-to-b from-gray-700 h-full flex items-center">
         <img src={logo} className="" />
       </section>
       <section className="w-7/12">
@@ -46,6 +57,33 @@ const Login = () => {
           onSubmit={formik.handleSubmit}
         >
           <div className="flex flex-col justify-center items-center">
+            <div className="rounded-full bg-gray-200 hover:bg-gray-300 flex justify-center items-center w-4/5">
+              <select
+                name="accountType"
+                id="accountType"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.accountType}
+                className="py-2.5 mr-3 pl-5 bg-transparent text-lg text-center focus:outline-0 w-full"
+              >
+                <option value="" hidden>
+                  Choose account type
+                </option>
+                <option value="Student" className="bg-gray-200">
+                  Student
+                </option>
+                <option value="Employer" className="bg-gray-200">
+                  Employer
+                </option>
+              </select>
+            </div>
+            <div className="h-10 w-4/5 ml-8 pl-1 flex justify-start items-center">
+              {formik.errors.accountType && formik.touched.accountType ? (
+                <div className="text-red-500 align-middle flex-initial">
+                  {formik.errors.accountType}
+                </div>
+              ) : null}
+            </div>
             <input
               className="rounded-full text-center py-2 px-5 w-4/5 mx-8 bg-gray-200 hover:bg-gray-300 placeholder:text-center text-lg focus:outline-0"
               placeholder="Email"
@@ -89,7 +127,7 @@ const Login = () => {
             </div>
             <button
               type="submit"
-              className="rounded-full p-2 w-4/5 mx-8 mb-8 placeholder:text-center text-xl bg-cyan-400 hover:bg-cyan-600 text-white"
+              className="rounded-full p-2 w-4/5 mx-8 mb-8 placeholder:text-center text-lg bg-black text-white font-semibold"
             >
               SIGN IN
             </button>

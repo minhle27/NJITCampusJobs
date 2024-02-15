@@ -247,7 +247,7 @@ const RegisterStudent = (props: Modal) => {
               <div className="font-bold block p-2">Profile Picture</div>
               <div className="rounded-full w-full p-3 bg-gray-200 hover:bg-gray-300 cursor-pointer flex flex-auto">
                 {fileNames.profilePicture === "" ? (
-                  <div className="w-full leading-3 text-lg flex justify-center items-center text-gray-500">
+                  <div className="w-full leading-3 text-lg flex justify-center items-center text-gray-400">
                     Choose file
                   </div>
                 ) : (
@@ -270,7 +270,7 @@ const RegisterStudent = (props: Modal) => {
               <div className="font-bold block p-2">Upload Resume</div>
               <div className="rounded-full w-full p-3 bg-gray-200 hover:bg-gray-300 cursor-pointer flex flex-auto">
                 {fileNames.resume === "" ? (
-                  <div className="w-full leading-3 text-lg flex justify-center items-center text-gray-500">
+                  <div className="w-full leading-3 text-lg flex justify-center items-center text-gray-400">
                     Choose file
                   </div>
                 ) : (

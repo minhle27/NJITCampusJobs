@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
 import jobModel from "../models/Job";
 import employerModel from '../models/Employer';
+import studentModel from "../models/Student";
 const faker = require("faker");
 
-async function getId(): Promise<string | null>{
+async function getIdEmployer(): Promise<string | null>{
     try {
         // Your query criteria to find the document
         const randomDocument = await employerModel.aggregate([
@@ -24,6 +25,27 @@ async function getId(): Promise<string | null>{
     }
 }
 
+async function getIdStudent(): Promise<Array<3> | null>{
+  try {
+      // Your query criteria to find the document
+      const randomDocument = await studentModel.aggregate([
+          { $sample: { size: 3 } }
+      ]);
+
+      // Execute the query to find the document
+      if (randomDocument && randomDocument.length > 0) {
+          // If a random document is found, return its _id
+          return randomDocument; // Assuming you've transformed _id to id in your schema
+      } else {
+          // If no document is found, return null
+          return null;
+      }
+  } catch (error) {
+      console.error("Error retrieving _id:", error);
+      throw error;
+  }
+}
+
 async function seedJobs() {
   try {
     // Connect to MongoDB
@@ -34,9 +56,10 @@ async function seedJobs() {
 
     const seedCounts = 1;
     const jobs = [];
+    const studentApplication = await getIdStudent();
 
     for (let i = 0; i < seedCounts; i++) {
-      const employerId = await getId(); // Await the result of getId()
+      const employerId = await getIdEmployer(); // Await the result of getId()
 
       const job = {
         employer: employerId,
@@ -45,11 +68,11 @@ async function seedJobs() {
         jobDescription: faker.lorem.paragraph(),
         location: faker.address.city(),
         applicants: {
-            accepted: [],
-            pending: [],
-            rejected: []
+            accepted: studentApplication ? [studentApplication[0]] : [],
+            pending: studentApplication ? [studentApplication[1]] : [],
+            rejected: studentApplication ? [studentApplication[0]] : []
         },
-        salary: faker.random.number({ min: 30000, max: 100000 }),
+        salary: faker.datatype.number({ min: 30000, max: 100000 }),
         status: "open"
       };
 

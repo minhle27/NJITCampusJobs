@@ -5,7 +5,7 @@ import { isEmail } from "validator";
 
 type studentSchemaInferType = InferSchemaType<typeof studentSchema>;
 
-const fileSchema = new mongoose.Schema({
+export const fileSchema = new mongoose.Schema({
   fileUrl: {
     type: String,
     default: "",
@@ -13,6 +13,10 @@ const fileSchema = new mongoose.Schema({
   cloudinaryId: {
     type: String,
     default: "",
+  },
+  isDefault: {
+    type: Boolean,
+    default: true,
   },
 });
 
@@ -50,7 +54,15 @@ const studentSchema = new mongoose.Schema(
       type: String,
       maxlength: [279, "Must be 279 characters or less"],
     },
-    profilePicture: fileSchema,
+    profilePicture: {
+      type: fileSchema,
+      default: {
+        fileUrl:
+          "https://res.cloudinary.com/ddjybuw16/image/upload/v1707930194/Test/blankProfile.png",
+        cloudinaryId: "Test/blankProfile.png",
+        isDefault: true,
+      },
+    },
     resume: [fileSchema],
     transcript: fileSchema,
     major: {
@@ -76,18 +88,12 @@ const studentSchema = new mongoose.Schema(
         required: true,
         validate: {
           validator: function (this, value: number) {
-            const currentYear = new Date().getFullYear();
             if (this && "classYear" in this) {
-              return (
-                value >= 2000 &&
-                value <= currentYear &&
-                value >= this.classYear.start
-              );
+              return value >= this.classYear.start;
             }
             return false;
           },
-          message:
-            "Invalid end year. Must be between 2000 and the current year and greater than start year.",
+          message: "Invalid end year. Must be greater than start year.",
         },
       },
     },

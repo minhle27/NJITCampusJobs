@@ -3,11 +3,10 @@ import * as Yup from "yup";
 import logo from "../../../assets/NJIT Campus Job-logos_transparent.svg";
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 import { Fragment, useState } from "react";
-import axios from "axios";
 import RegisterStudent from "./RegisterStudent";
 import RegisterEmployer from "./RegisterEmployer";
 
-interface InputFormReg {
+export interface GeneralInfoType {
   accountType: string;
   email: string;
   password: string;
@@ -17,22 +16,9 @@ interface InputFormReg {
 const Register = () => {
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
-  // const [newUser, setNewUser] = useState<InputFormReg>({
-  //   accountType: "",
-  //   email: "",
-  //   password: "",
-  //   fullName: "",
-  // });
-  let newUser = {
-    accountType: "",
-    email: "",
-    password: "",
-    fullName: "",
-  };
+  const [newUser, setNewUser] = useState<GeneralInfoType | null>(null);
 
-  const endpoint = "";
-
-  const formik = useFormik<InputFormReg>({
+  const formik = useFormik<GeneralInfoType>({
     initialValues: {
       accountType: "Choose account type",
       email: "",
@@ -41,7 +27,7 @@ const Register = () => {
     },
     validationSchema: Yup.object({
       accountType: Yup.string().matches(
-        /Student|Employer/,
+        /student|employer/,
         "Please choose account type"
       ),
       email: Yup.string()
@@ -68,8 +54,8 @@ const Register = () => {
       fullName: Yup.string().required("Please enter your full fullName"),
     }),
     onSubmit: (value) => {
-      newUser = value;
-      console.log(newUser);
+      setNewUser(value);
+      console.log(value);
       setModalVisible(true);
     },
   });
@@ -101,10 +87,10 @@ const Register = () => {
                   <option value="" hidden>
                     Choose account type
                   </option>
-                  <option value="Student" className="bg-gray-200">
+                  <option value="student" className="bg-gray-200">
                     Student
                   </option>
-                  <option value="Employer" className="bg-gray-200">
+                  <option value="employer" className="bg-gray-200">
                     Employer
                   </option>
                 </select>
@@ -183,14 +169,16 @@ const Register = () => {
           </form>
         </section>
       </div>
-      {formik.values.accountType === "Student" ? (
+      {formik.values.accountType === "student" ? (
         <RegisterStudent
           isVisible={modalVisible}
+          newUser={newUser!}
           onClose={() => setModalVisible(false)}
         />
       ) : (
         <RegisterEmployer
           isVisible={modalVisible}
+          newUser={newUser!}
           onClose={() => setModalVisible(false)}
         />
       )}

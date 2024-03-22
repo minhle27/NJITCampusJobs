@@ -35,12 +35,12 @@ const authController = {
           fullName,
           phone,
           profileDescription,
-          profilePicture: uploadCloudinary(profilePicture, "profilePicture"),
+          profilePicture: await uploadCloudinary(profilePicture, "profilePicture"),
           accountType,
           classYear,
           degree,
-          resume: uploadCloudinary(resume, "resume"),
-          transcript: uploadCloudinary(transcript, "transcript"),
+          resume: await uploadCloudinary(resume, "resume"),
+          transcript: await uploadCloudinary(transcript, "transcript"),
           major,
         });
         const savedStudent = await newStudent.save();
@@ -58,7 +58,7 @@ const authController = {
           fullName,
           phone,
           profileDescription,
-          profilePicture: uploadCloudinary(profilePicture, "profilePicture"),
+          profilePicture: await uploadCloudinary(profilePicture, "profilePicture"),
           accountType,
           department,
         });

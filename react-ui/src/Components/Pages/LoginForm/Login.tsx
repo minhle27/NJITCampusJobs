@@ -8,7 +8,8 @@ import { useAppDispatch } from "../../../app/hooks";
 import { setCredentials } from "../../../state/authSlice";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
-import { ErrorType } from "../../../types";
+import { getErrorMessage } from "../../../utils";
+// import { getErrorMessage } from "../../../utils";
 interface InputForm {
   email: string;
   password: string;
@@ -17,7 +18,7 @@ interface InputForm {
 
 const Login = () => {
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
-  const [loginUser, { isLoading }] = useLoginUserMutation();
+  const [loginUser, { isLoading, error }] = useLoginUserMutation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const toast = useToast();
@@ -51,9 +52,10 @@ const Login = () => {
           console.log(user);
           dispatch(setCredentials(user));
           navigate("/");
-        } catch (err) {
-          console.log(err);
-          const errorMessage = (err as ErrorType).data.error;
+        } catch (e) {
+          console.log(e);
+          console.log(error);
+          const errorMessage = error && 'data' in error ? JSON.stringify(error.data) : getErrorMessage(e);
           toast({
             status: "error",
             title: "Error",

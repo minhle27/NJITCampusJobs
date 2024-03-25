@@ -1,9 +1,10 @@
 import { combineSlices, configureStore } from "@reduxjs/toolkit";
 import type { Action, ThunkAction } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
-import { apiSlice } from "../state/apiSlice";
+import { apiSlice } from "../services/apiSlice";
+import { authSlice } from "../state/authSlice";
 
-const rootReducer = combineSlices(apiSlice);
+const rootReducer = combineSlices(apiSlice, authSlice);
 export type RootState = ReturnType<typeof rootReducer>;
 
 export const makeStore = (preloadedState?: Partial<RootState>) => {

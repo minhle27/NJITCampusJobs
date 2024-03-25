@@ -28,3 +28,10 @@ export interface Employer extends BaseUser {
 export type User = Student | Employer;
 
 export type FileReadType = string | ArrayBuffer | null;
+
+export interface ErrorType {
+  data: {
+    error: string;
+  };
+  status: string;
+}

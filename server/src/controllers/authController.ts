@@ -79,11 +79,11 @@ const authController = {
     );
     let user;
     switch (accountType) {
-      case "Student": {
+      case "student": {
         user = await studentModel.findOne({ email });
         break;
       }
-      case "Employer": {
+      case "employer": {
         user = await employerModel.findOne({ email });
         break;
       }

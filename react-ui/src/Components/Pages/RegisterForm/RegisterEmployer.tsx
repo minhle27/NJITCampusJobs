@@ -5,8 +5,10 @@ import * as Yup from "yup";
 import { useState } from "react";
 import { GeneralInfoType } from "./Register";
 import { FileReadType } from "../../../types";
-import { useAddNewUserMutation } from "../../../state/apiSlice";
+import { useAddNewUserMutation } from "../../../services/apiSlice";
 import { Spinner } from "../../Modules/Spinner";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@chakra-ui/react";
 
 interface Modal {
   isVisible: boolean;
@@ -29,6 +31,8 @@ const RegisterEmployer = ({ newUser, isVisible, onClose }: Modal) => {
     profilePicture: "",
   });
   const [addNewEmployer, { isLoading }] = useAddNewUserMutation();
+  const navigate = useNavigate();
+  const toast = useToast();
 
   const depts: string[] = [
     "Department of Biomedical Engineering",
@@ -69,10 +73,18 @@ const RegisterEmployer = ({ newUser, isVisible, onClose }: Modal) => {
         department: formik.values.department,
         profilePicture: profilePicture,
       };
-      console.log(registerInfo);
       if (!isLoading) {
         try {
           await addNewEmployer(registerInfo).unwrap();
+          toast({
+            status: "success",
+            title: "Account created.",
+            description: "We've created your account for you.",
+            isClosable: true,
+          });
+          setTimeout(() => {
+            navigate("/login");
+          }, 3000);
         } catch (err) {
           console.error("Failed to register new Student: ", err);
         }

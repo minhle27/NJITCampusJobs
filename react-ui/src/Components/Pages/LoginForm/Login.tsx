@@ -149,9 +149,16 @@ const Login = () => {
             </div>
             <button
               type="submit"
-              className="rounded-full p-2 w-4/5 mx-8 mb-8 placeholder:text-center text-lg bg-black text-white font-semibold"
+              className="rounded p-2 w-4/5 mx-8 mb-8 placeholder:text-center text-lg bg-black text-white font-semibold"
             >
               SIGN IN
+            </button>
+            <button
+              type="button"
+              className="rounded p-2 w-4/5 mx-8 mb-8 placeholder:text-center text-lg bg-gray-500 text-white font-semibold"
+              onClick={() => navigate("/register")}
+            >
+              CREATE NEW ACCOUNT
             </button>
           </div>
         </form>

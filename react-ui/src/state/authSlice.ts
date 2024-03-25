@@ -16,7 +16,7 @@ export const authSlice = createAppSlice({
       state,
       {
         payload: { user, token },
-      }: PayloadAction<{ user: User; token: string }>,
+      }: PayloadAction<{ user: User | null; token: string | null }>,
     ) => {
       state.user = user
       state.token = token

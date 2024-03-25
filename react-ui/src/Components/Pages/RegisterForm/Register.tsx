@@ -5,6 +5,7 @@ import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 import { Fragment, useState } from "react";
 import RegisterStudent from "./RegisterStudent";
 import RegisterEmployer from "./RegisterEmployer";
+import { useNavigate } from "react-router-dom";
 
 export interface GeneralInfoType {
   accountType: string;
@@ -17,6 +18,7 @@ const Register = () => {
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [newUser, setNewUser] = useState<GeneralInfoType | null>(null);
+  const navigate = useNavigate();
 
   const formik = useFormik<GeneralInfoType>({
     initialValues: {
@@ -161,9 +163,16 @@ const Register = () => {
               </div>
               <button
                 type="submit"
-                className="rounded-full p-2 w-4/5 mx-8 mb-8 placeholder:text-center text-lg bg-black text-white font-semibold"
+                className="rounded p-2 w-4/5 mx-8 mb-8 placeholder:text-center text-lg bg-black text-white font-semibold"
               >
-                Continue
+                CONTINUE
+              </button>
+              <button
+                type="button"
+                className="rounded p-2 w-4/5 mx-8 mb-8 placeholder:text-center text-lg bg-gray-500 text-white font-semibold"
+                onClick={() => navigate("/login")}
+              >
+                LOGIN
               </button>
             </div>
           </form>

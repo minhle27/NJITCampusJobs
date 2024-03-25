@@ -3,10 +3,11 @@ import * as React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useState } from "react";
-import axios from "axios";
+import { GeneralInfoType } from "./Register";
 
 interface Modal {
   isVisible: boolean;
+  newUser: GeneralInfoType;
   onClose: React.MouseEventHandler<HTMLButtonElement>;
 }
 
@@ -23,7 +24,7 @@ interface FileName {
   resume: string;
 }
 
-const RegisterStudent = (props: Modal) => {
+const RegisterStudent = ({ isVisible, newUser, onClose }: Modal) => {
   type FileRead = string | ArrayBuffer | null;
   const [profilePicture, setProfilePicture] = useState<FileRead>("");
   const [resume, setResume] = useState<FileRead>("");
@@ -40,8 +41,6 @@ const RegisterStudent = (props: Modal) => {
     "Master's degree",
     "Doctoral degree",
   ];
-
-  const endpoint = "";
 
   const formik = useFormik<AdditionalRegister>({
     initialValues: {
@@ -60,7 +59,8 @@ const RegisterStudent = (props: Modal) => {
       degree: Yup.string().required("Please select your degree"),
     }),
     onSubmit: () => {
-      const newUser = {
+      const registerInfo = {
+        ...newUser,
         major: formik.values.major,
         phone: formik.values.phone,
         classYear: {
@@ -71,10 +71,7 @@ const RegisterStudent = (props: Modal) => {
         profilePicture: profilePicture,
         resume: resume,
       };
-      axios
-        .post(endpoint, newUser)
-        .then((res) => console.log(res))
-        .catch((err) => console.error(err));
+      console.log(registerInfo);
     },
   });
 
@@ -100,7 +97,7 @@ const RegisterStudent = (props: Modal) => {
     setFileNames({ ...fileNames, resume: file.name });
   };
 
-  if (!props.isVisible) return null;
+  if (!isVisible) return null;
   return (
     <section className="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center">
       <div className="w-1/2 flex flex-col h-5/6">
@@ -109,7 +106,7 @@ const RegisterStudent = (props: Modal) => {
             <div className="flex justify-end items-center">
               <button
                 className="text-black text-xs place-self-end"
-                onClick={props.onClose}
+                onClick={onClose}
               >
                 <CloseOutlined />
               </button>

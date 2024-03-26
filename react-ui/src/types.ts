@@ -1,4 +1,5 @@
 export interface BaseUser {
+  id: string;
   password: string;
   token: string;
   email: string;

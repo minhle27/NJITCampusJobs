@@ -10,7 +10,6 @@ import "./App.css";
 import HomePage from "./Components/Pages/HomePage/HomePage.tsx";
 import { useAuth } from "./hooks/useAuth.ts";
 import RequireAuth from "./Components/Modules/RequireAuth.tsx";
-import RequireEmployer from "./Components/Modules/RequireEmployer.tsx";
 import EmployerDashboard from "./Components/Pages/EmployerDashboard/index.tsx";
 
 const App = () => {
@@ -29,11 +28,11 @@ const App = () => {
             }
           />
           <Route
-            path="/dashboard"
+            path="/dashboard/:id"
             element={
-              <RequireEmployer>
+              <RequireAuth>
                 <EmployerDashboard />
-              </RequireEmployer>
+              </RequireAuth>
             }
           />
           <Route

@@ -1,15 +1,26 @@
 import { useState } from "react";
 import SearchBar from "../../Modules/SearchBar";
+import { useParams } from "react-router-dom";
+import JobsList from "./JobsList";
+import Protected from "../../Modules/Protected";
 
 const EmployerDashboard = () => {
-  const [searchValue, setSearchValue] = useState('');
+  const [searchValue, setSearchValue] = useState("");
+  const { id } = useParams();
 
   return (
-    <div>
+    <div className="flex flex-col">
       <SearchBar searchValue={searchValue} setSearchValue={setSearchValue} />
+      <JobsList />
+      <Protected id={id!}>
+        <div className="flex justify-center">
+          <button className="grow max-w-sm py-2 bg-black text-white font-semibold rounded-md shadow-md hover:bg-gray-900 focus:outline-none">
+            Create New Jobs
+          </button>
+        </div>
+      </Protected>
     </div>
   );
 };
 
 export default EmployerDashboard;
-

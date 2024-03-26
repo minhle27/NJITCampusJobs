@@ -1,9 +1,12 @@
+import { useState } from "react";
 import SearchBar from "../../Modules/SearchBar";
 
 const EmployerDashboard = () => {
+  const [searchValue, setSearchValue] = useState('');
+
   return (
     <div>
-      <SearchBar />
+      <SearchBar searchValue={searchValue} setSearchValue={setSearchValue} />
     </div>
   );
 };

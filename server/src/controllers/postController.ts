@@ -9,7 +9,7 @@ const postController = {
     req: AuthenticatedRequest,
     res: Response
   ) => {
-    const employer = await employerModel.findById(req.user).populate('jobPosts');
+    const employer = await employerModel.findById(req.params.id).populate('jobPosts');
     return res.status(200).json(employer?.jobPosts);
   },
 

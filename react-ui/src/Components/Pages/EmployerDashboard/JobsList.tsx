@@ -27,6 +27,7 @@ const JobsList = ({ employerId }: JobsListProps) => {
 
   let content;
   if (isSuccess) {
+    console.log(posts);
     content = posts.map((post) => (
       <PostExcerpt key={post.id} post={post}>
         <EmployerPostOptions />

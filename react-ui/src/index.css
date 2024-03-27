@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .btn-primary {
+    @apply py-1 px-5 text-black font-semibold rounded-md shadow-md;
+  }
+}
+
 .spinner {
   display: flex;
   flex-direction: column;

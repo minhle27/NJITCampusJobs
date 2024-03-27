@@ -11,9 +11,9 @@ const EmployerDashboard = () => {
   return (
     <div className="flex flex-col">
       <SearchBar searchValue={searchValue} setSearchValue={setSearchValue} />
-      <JobsList />
+      <JobsList employerId={id!} />
       <Protected id={id!}>
-        <div className="flex justify-center">
+        <div className="flex justify-center mt-5">
           <button className="grow max-w-sm py-2 bg-black text-white font-semibold rounded-md shadow-md hover:bg-gray-900 focus:outline-none">
             Create New Jobs
           </button>

@@ -1,4 +1,4 @@
-import { User, LoginInfo } from "../types";
+import { User, LoginInfo, NewJobPost } from "../types";
 import { isEmail } from "validator";
 
 const isString = (text: unknown): text is string => {
@@ -125,6 +125,7 @@ const fieldValidate = {
         throw new Error(`Incorrect type: ${object.accountType}`);
     }
   },
+
   processLoginInfo: (object: unknown): LoginInfo => {
     if (!object || typeof object !== "object") {
       throw new Error("Incorrect or missing data");
@@ -140,6 +141,10 @@ const fieldValidate = {
       accountType: object.accountType,
     };
   },
+
+  processNewPost: (object: unknown): NewJobPost => {
+    return object as NewJobPost;
+  }
 };
 
 export default fieldValidate;

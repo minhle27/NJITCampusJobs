@@ -6,7 +6,9 @@ export interface BaseUser {
   fullName: string;
   phone: string;
   profileDescription?: string;
-  profilePicture?: string;
+  profilePicture: {
+    fileUrl: string;
+  };
 }
 
 export interface Student extends BaseUser {
@@ -35,4 +37,21 @@ export interface ErrorType {
     error: string;
   };
   status: string;
+}
+
+export interface JobPost {
+  applicants: {
+    accepted: [];
+    pending: [];
+    rejected: [];
+  };
+  employer: string;
+  title: string;
+  jobDescription: string;
+  location: string;
+  salary: number;
+  status: "open" | "closed";
+  createdAt: string;
+  updatedAt: string;
+  id: string;
 }

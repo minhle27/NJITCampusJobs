@@ -28,6 +28,7 @@ const jobSchema = new mongoose.Schema(
       type: String,
       validate: {
         validator: (value: string) => {
+          if (value.length === 0) return true;
           const urlRegex = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?$/;
           return urlRegex.test(value);
         },

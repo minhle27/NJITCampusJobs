@@ -1,6 +1,6 @@
 interface Props {
-  searchValue : string,
-  setSearchValue: React.Dispatch<React.SetStateAction<string>>
+  searchValue: string;
+  setSearchValue: React.Dispatch<React.SetStateAction<string>>;
 }
 
 import logo from "../../assets/search-logo.svg";

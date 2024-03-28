@@ -8,7 +8,7 @@ async function seedEmployer() {
   try {
     await mongoose.connect(config.TEST_MONGODB_URI as string);
     console.log("Seeding Employer...");
-    const seedCounts = 60;
+    const seedCounts = 12;
     const employers = [];
     const hashedPassword = await bcrypt.hash("Leminh279#", 10);
     const depts: string[] = [

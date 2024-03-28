@@ -27,7 +27,7 @@ async function seedJobs() {
     await mongoose.connect(config.TEST_MONGODB_URI as string);
     console.log("Seeding Jobs...");
 
-    const seedCounts = 50;
+    const seedCounts = 200;
 
     for (let i = 0; i < seedCounts; i++) {
       const employerId = await getIdEmployer(); // Await the result of getId()

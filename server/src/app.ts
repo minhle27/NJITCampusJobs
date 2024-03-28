@@ -17,7 +17,7 @@ const app = express();
 
 // MONGODB connection
 mongoose.set("strictQuery", false);
-console.log("connecting to", config.MONGODB_URI);
+console.log("connecting to", config.TEST_MONGODB_URI);
 mongoose
   .connect(config.MONGODB_URI as string)
   .then(() => {

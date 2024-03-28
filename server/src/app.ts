@@ -19,7 +19,7 @@ const app = express();
 mongoose.set("strictQuery", false);
 console.log("connecting to", config.TEST_MONGODB_URI);
 mongoose
-  .connect(config.MONGODB_URI as string)
+  .connect(config.TEST_MONGODB_URI as string)
   .then(() => {
     console.log("connected to MongoDB");
   })

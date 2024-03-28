@@ -4,6 +4,10 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useState } from "react";
 import { GeneralInfoType } from "./Register";
+import { useAddNewUserMutation } from "../../../services/apiSlice";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@chakra-ui/react";
+import { getErrorMessage } from "../../../utils";
 
 interface Modal {
   isVisible: boolean;
@@ -32,6 +36,9 @@ const RegisterStudent = ({ isVisible, newUser, onClose }: Modal) => {
     profilePicture: "",
     resume: "",
   });
+  const [addNewStudent, { isLoading, error }] = useAddNewUserMutation();
+  const navigate = useNavigate();
+  const toast = useToast();
 
   const classYear: number[] = [];
   for (let i = 2022; i < 2029; i++) classYear.push(i);
@@ -58,7 +65,7 @@ const RegisterStudent = ({ isVisible, newUser, onClose }: Modal) => {
       end: Yup.number().positive("Please select your end year"),
       degree: Yup.string().required("Please select your degree"),
     }),
-    onSubmit: () => {
+    onSubmit: async () => {
       const registerInfo = {
         ...newUser,
         major: formik.values.major,
@@ -72,6 +79,32 @@ const RegisterStudent = ({ isVisible, newUser, onClose }: Modal) => {
         resume: resume,
       };
       console.log(registerInfo);
+      if (!isLoading) {
+        try {
+          await addNewStudent(registerInfo).unwrap();
+          toast({
+            status: "success",
+            title: "Account created.",
+            description: "We've created your account for you.",
+            isClosable: true,
+          });
+          setTimeout(() => {
+            navigate("/login");
+          }, 3000);
+        } catch (err) {
+          console.error("Failed to register new Student: ", err);
+          const errorMessage =
+            error && "data" in error
+              ? JSON.stringify(error.data)
+              : JSON.stringify(getErrorMessage(err));
+          toast({
+            status: "error",
+            title: "Error",
+            description: errorMessage,
+            isClosable: true,
+          });
+        }
+      }
     },
   });
 
@@ -134,8 +167,10 @@ const RegisterStudent = ({ isVisible, newUser, onClose }: Modal) => {
                 }
               >
                 <option value="">Degree of Study</option>
-                {degrees.map((degree) => (
-                  <option value={degree}>{degree}</option>
+                {degrees.map((degree, id) => (
+                  <option key={id} value={degree}>
+                    {degree}
+                  </option>
                 ))}
               </select>
             </div>
@@ -176,8 +211,8 @@ const RegisterStudent = ({ isVisible, newUser, onClose }: Modal) => {
                   <option value="year" hidden>
                     Start
                   </option>
-                  {classYear.map((year) => (
-                    <option value={year} className="text-black">
+                  {classYear.map((year, id) => (
+                    <option value={year} key={id} className="text-black">
                       {year}
                     </option>
                   ))}
@@ -196,8 +231,8 @@ const RegisterStudent = ({ isVisible, newUser, onClose }: Modal) => {
                   <option value="" hidden>
                     End
                   </option>
-                  {classYear.map((year) => (
-                    <option value={year} className="text-black">
+                  {classYear.map((year, id) => (
+                    <option value={year} key={id} className="text-black">
                       {year}
                     </option>
                   ))}

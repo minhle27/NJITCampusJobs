@@ -9,6 +9,7 @@ import { useAddNewUserMutation } from "../../../services/apiSlice";
 import { Spinner } from "../../Modules/Spinner";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
+import { getErrorMessage } from "../../../utils";
 
 interface Modal {
   isVisible: boolean;
@@ -30,7 +31,7 @@ const RegisterEmployer = ({ newUser, isVisible, onClose }: Modal) => {
   const [fileNames, setFileNames] = useState<FileName>({
     profilePicture: "",
   });
-  const [addNewEmployer, { isLoading }] = useAddNewUserMutation();
+  const [addNewEmployer, { isLoading, error }] = useAddNewUserMutation();
   const navigate = useNavigate();
   const toast = useToast();
 
@@ -86,7 +87,17 @@ const RegisterEmployer = ({ newUser, isVisible, onClose }: Modal) => {
             navigate("/login");
           }, 3000);
         } catch (err) {
-          console.error("Failed to register new Student: ", err);
+          console.error("Failed to register new Employer: ", err);
+          const errorMessage =
+            error && "data" in error
+              ? JSON.stringify(error.data)
+              : JSON.stringify(getErrorMessage(err));
+          toast({
+            status: "error",
+            title: "Error",
+            description: errorMessage,
+            isClosable: true,
+          });
         }
       }
     },

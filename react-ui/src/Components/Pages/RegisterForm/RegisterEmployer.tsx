@@ -11,11 +11,11 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
 import { getErrorMessage } from "../../../utils";
 import FormFrameModal from "../../Modules/FormFrameModal";
+import { ToggleHandle } from "../../Modules/FormFrameModal";
 
 interface Modal {
-  isVisible: boolean;
   newUser: GeneralInfoType;
-  onClose: React.MouseEventHandler<HTMLButtonElement>;
+  registerEmployerRef: React.MutableRefObject<ToggleHandle | null>;
 }
 
 interface AdditionalRegister {
@@ -27,7 +27,7 @@ interface FileName {
   profilePicture: string;
 }
 
-const RegisterEmployer = ({ newUser, isVisible, onClose }: Modal) => {
+const RegisterEmployer = ({ newUser, registerEmployerRef }: Modal) => {
   const [profilePicture, setProfilePicture] = useState<FileReadType>("");
   const [fileNames, setFileNames] = useState<FileName>({
     profilePicture: "",
@@ -115,14 +115,14 @@ const RegisterEmployer = ({ newUser, isVisible, onClose }: Modal) => {
     setFileNames({ ...fileNames, profilePicture: file.name });
   };
 
-  if (!isVisible) return null;
   return (
-    <FormFrameModal title={"Create your profile"} onClose={onClose}>
-      <form
-        className="px-4 overflow-auto scrollbar-thin"
-        onSubmit={formik.handleSubmit}
-      >
-        <label htmlFor="degree" className="font-bold block p-2">
+    <FormFrameModal
+      title={"Create your profile"}
+      handleSubmit={formik.handleSubmit}
+      ref={registerEmployerRef}
+    >
+      <>
+        <label htmlFor="degree" className="field-title">
           Department
         </label>
         <div className="rounded-full bg-gray-200 hover:bg-gray-300 flex justify-center items-center">
@@ -148,9 +148,9 @@ const RegisterEmployer = ({ newUser, isVisible, onClose }: Modal) => {
           ) : null}
         </div>
 
-        <div className="font-bold block p-2">Phone</div>
+        <div className="field-title">Phone</div>
         <input
-          className="rounded-full w-full p-1.5 bg-gray-200 hover:bg-gray-300 placeholder:text-center text-lg text-center focus:outline-0"
+          className="field-input"
           placeholder="What is your phone number"
           id="phone"
           name="phone"
@@ -164,7 +164,7 @@ const RegisterEmployer = ({ newUser, isVisible, onClose }: Modal) => {
           ) : null}
         </div>
 
-        <div className="font-bold block p-2">Profile Picture</div>
+        <div className="field-title">Profile Picture</div>
         <label htmlFor="profilePicture">
           <div className="rounded-full w-full p-3 bg-gray-200 hover:bg-gray-300 cursor-pointer flex flex-auto">
             {fileNames.profilePicture === "" ? (
@@ -189,12 +189,12 @@ const RegisterEmployer = ({ newUser, isVisible, onClose }: Modal) => {
 
         <button
           type="submit"
-          className="rounded-full text-center mt-11 mb-5 p-2 w-full placeholder:text-center text-lg bg-black text-white cursor-pointer font-semibold"
+          className="rounded-full text-center mt-7 mb-5 p-2 w-full placeholder:text-center text-lg bg-black text-white cursor-pointer font-semibold"
         >
           Create Profile
         </button>
         {isLoading ? <Spinner /> : <></>}
-      </form>
+      </>
     </FormFrameModal>
   );
 };

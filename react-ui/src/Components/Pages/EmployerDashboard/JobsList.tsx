@@ -42,7 +42,7 @@ const JobsList = ({ employerId }: JobsListProps) => {
   }
 
   return (
-    <div className="flex justify-center flex-col items-center grow overflow-y-auto">
+    <div className="flex flex-col items-center grow overflow-y-auto">
       {content}
     </div>
   );

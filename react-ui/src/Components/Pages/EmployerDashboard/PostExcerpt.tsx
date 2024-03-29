@@ -1,9 +1,10 @@
+import { ReactNode } from "react";
 import { useGetEmployerQuery } from "../../../services/apiSlice";
 import { JobPost } from "../../../types";
 
 interface PostExcerptProps {
   post: JobPost;
-  children: JSX.Element;
+  children: ReactNode;
 }
 
 const PostExcerpt = ({ post, children }: PostExcerptProps) => {

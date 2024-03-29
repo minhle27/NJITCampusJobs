@@ -10,6 +10,9 @@ const postController = {
     res: Response
   ) => {
     const employer = await employerModel.findById(req.params.id).populate('jobPosts');
+    if (!employer) {
+      return res.status(404).json({ error: "User Not Found" });
+    }
     return res.status(200).json(employer?.jobPosts);
   },
 

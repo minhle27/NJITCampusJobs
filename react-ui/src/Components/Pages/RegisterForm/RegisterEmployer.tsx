@@ -3,10 +3,16 @@ import * as React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useState } from "react";
-import axios from "axios";
+import { GeneralInfoType } from "./Register";
+import { FileReadType } from "../../../types";
+import { useAddNewUserMutation } from "../../../services/apiSlice";
+import { Spinner } from "../../Modules/Spinner";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@chakra-ui/react";
 
 interface Modal {
   isVisible: boolean;
+  newUser: GeneralInfoType;
   onClose: React.MouseEventHandler<HTMLButtonElement>;
 }
 
@@ -19,12 +25,14 @@ interface FileName {
   profilePicture: string;
 }
 
-const RegisterStudent = (props: Modal) => {
-  type FileRead = string | ArrayBuffer | null;
-  const [profilePicture, setProfilePicture] = useState<FileRead>("");
+const RegisterEmployer = ({ newUser, isVisible, onClose }: Modal) => {
+  const [profilePicture, setProfilePicture] = useState<FileReadType>("");
   const [fileNames, setFileNames] = useState<FileName>({
     profilePicture: "",
   });
+  const [addNewEmployer, { isLoading }] = useAddNewUserMutation();
+  const navigate = useNavigate();
+  const toast = useToast();
 
   const depts: string[] = [
     "Department of Biomedical Engineering",
@@ -48,8 +56,6 @@ const RegisterStudent = (props: Modal) => {
     "Department of Informatics",
   ];
 
-  const endpoint = "";
-
   const formik = useFormik<AdditionalRegister>({
     initialValues: {
       phone: "",
@@ -60,16 +66,29 @@ const RegisterStudent = (props: Modal) => {
       phone: Yup.string().required("Please enter your phone number"),
       department: Yup.string().required("Please select your department"),
     }),
-    onSubmit: () => {
-      const newUser = {
+    onSubmit: async () => {
+      const registerInfo = {
+        ...newUser,
         phone: formik.values.phone,
         department: formik.values.department,
         profilePicture: profilePicture,
       };
-      axios
-        .post(endpoint, newUser)
-        .then((res) => console.log(res))
-        .catch((err) => console.error(err));
+      if (!isLoading) {
+        try {
+          await addNewEmployer(registerInfo).unwrap();
+          toast({
+            status: "success",
+            title: "Account created.",
+            description: "We've created your account for you.",
+            isClosable: true,
+          });
+          setTimeout(() => {
+            navigate("/login");
+          }, 3000);
+        } catch (err) {
+          console.error("Failed to register new Student: ", err);
+        }
+      }
     },
   });
 
@@ -84,7 +103,7 @@ const RegisterStudent = (props: Modal) => {
     setFileNames({ ...fileNames, profilePicture: file.name });
   };
 
-  if (!props.isVisible) return null;
+  if (!isVisible) return null;
   return (
     <section className="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center">
       <div className="w-1/2 flex flex-col h-5/6 justify-center">
@@ -93,7 +112,7 @@ const RegisterStudent = (props: Modal) => {
             <div className="flex justify-end items-center">
               <button
                 className="text-black text-xs place-self-end"
-                onClick={props.onClose}
+                onClick={onClose}
               >
                 <CloseOutlined />
               </button>
@@ -119,8 +138,10 @@ const RegisterStudent = (props: Modal) => {
                 className="py-2 mr-3 pl-5 bg-transparent text-lg text-center focus:outline-0 w-full"
               >
                 <option value="">Department</option>
-                {depts.map((dept) => (
-                  <option value={dept}>{dept}</option>
+                {depts.map((dept, id) => (
+                  <option value={dept} key={id}>
+                    {dept}
+                  </option>
                 ))}
               </select>
             </div>
@@ -175,6 +196,7 @@ const RegisterStudent = (props: Modal) => {
             >
               Create Profile
             </button>
+            {isLoading ? <Spinner /> : <></>}
           </form>
         </div>
       </div>
@@ -182,4 +204,4 @@ const RegisterStudent = (props: Modal) => {
   );
 };
 
-export default RegisterStudent;
+export default RegisterEmployer;

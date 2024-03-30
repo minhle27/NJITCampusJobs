@@ -75,9 +75,11 @@ type jobSchemaInferType = InferSchemaType<typeof jobSchema>;
 
 jobSchema.set("toJSON", {
   transform: (_document, returnedObject) => {
-    if ("_id" in returnedObject && typeof returnedObject._id === "string") {
+    if ("_id" in returnedObject) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
       returnedObject.id = returnedObject._id.toString();
       delete returnedObject._id;
+      delete returnedObject.__v;
     }
   },
 });

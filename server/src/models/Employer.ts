@@ -3,6 +3,7 @@ import uniqueValidator from "mongoose-unique-validator";
 import { InferSchemaType } from "mongoose";
 import { isEmail } from "validator";
 import { fileSchema } from "./Student";
+import { createDefaultProfilePicture } from "./Student";
 
 const employerSchema = new mongoose.Schema(
   {
@@ -46,11 +47,7 @@ const employerSchema = new mongoose.Schema(
     },
     profilePicture: {
       type: fileSchema,
-      default: {
-        fileUrl: "https://res.cloudinary.com/ddjybuw16/image/upload/v1707930194/Test/blankProfile.png",
-        cloudinaryId: "Test/blankProfile.png",
-        isDefault: true,
-      },
+      default: createDefaultProfilePicture,
     },
     jobPosts: [
       {
@@ -84,9 +81,11 @@ type employerSchemaInferType = InferSchemaType<typeof employerSchema>;
 
 employerSchema.set("toJSON", {
   transform: (_document, returnedObject) => {
-    if ("_id" in returnedObject && typeof returnedObject._id === "string") {
+    if ("_id" in returnedObject) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
       returnedObject.id = returnedObject._id.toString();
       delete returnedObject._id;
+      delete returnedObject.__v;
     }
     // the passwordHash should not be revealed
     delete returnedObject.password;

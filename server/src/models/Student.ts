@@ -6,18 +6,22 @@ import { isEmail } from "validator";
 type studentSchemaInferType = InferSchemaType<typeof studentSchema>;
 
 export const fileSchema = new mongoose.Schema({
-  fileUrl: {
-    type: String,
-    default: "",
-  },
-  cloudinaryId: {
-    type: String,
-    default: "",
-  },
-  isDefault: {
-    type: Boolean,
-    default: true,
-  },
+  fileUrl: String,
+  cloudinaryId: String,
+  isDefault: Boolean,
+});
+
+export const createDefaultProfilePicture = () => ({
+  fileUrl:
+    "https://res.cloudinary.com/ddjybuw16/image/upload/v1707930194/Test/blankProfile.png",
+  cloudinaryId: "Test/blankProfile.png",
+  isDefault: true,
+});
+
+export const createDefaultFileSchema = () => ({
+  fileUrl: "",
+  cloudinaryId: "",
+  isDefault: true,
 });
 
 const studentSchema = new mongoose.Schema(
@@ -56,15 +60,16 @@ const studentSchema = new mongoose.Schema(
     },
     profilePicture: {
       type: fileSchema,
-      default: {
-        fileUrl:
-          "https://res.cloudinary.com/ddjybuw16/image/upload/v1707930194/Test/blankProfile.png",
-        cloudinaryId: "Test/blankProfile.png",
-        isDefault: true,
-      },
+      default: createDefaultProfilePicture,
     },
-    resume: [fileSchema],
-    transcript: fileSchema,
+    resume: {
+      type: [fileSchema],
+      default: createDefaultFileSchema
+    },
+    transcript: {
+      type: fileSchema,
+      default: createDefaultFileSchema,
+    },
     major: {
       type: String,
       required: true,
@@ -152,9 +157,11 @@ studentSchema.plugin(uniqueValidator, {
 
 studentSchema.set("toJSON", {
   transform: (_document, returnedObject) => {
-    if ("_id" in returnedObject && typeof returnedObject._id === "string") {
+    if ("_id" in returnedObject) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
       returnedObject.id = returnedObject._id.toString();
       delete returnedObject._id;
+      delete returnedObject.__v;
     }
     // the passwordHash should not be revealed
     delete returnedObject.password;

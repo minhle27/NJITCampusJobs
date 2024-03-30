@@ -37,7 +37,7 @@ const App = () => {
           />
           <Route
             path="/profile"
-            element={auth.user ? <Navigate to="/" /> : <Profile />}
+            element={auth.user ? <Navigate to="/" /> : <Pro />}
           />
         </Routes>
       </Router>

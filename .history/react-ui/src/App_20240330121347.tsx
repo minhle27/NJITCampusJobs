@@ -19,6 +19,7 @@ const App = () => {
     <>
       <Router>
         <Routes>
+
           <Route
             path="/"
             element={
@@ -35,10 +36,7 @@ const App = () => {
             path="/register"
             element={auth.user ? <Navigate to="/" /> : <Register />}
           />
-          <Route
-            path="/profile"
-            element={auth.user ? <Navigate to="/" /> : <Profile />}
-          />
+>>>>>>> 4d3da1afb2c331afae4ffde01125de523b0c8930
         </Routes>
       </Router>
     </>

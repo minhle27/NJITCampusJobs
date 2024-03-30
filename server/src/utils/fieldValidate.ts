@@ -11,8 +11,7 @@ const isPhone = (phone: string): boolean => {
 };
 
 const isPassword = (password: string): boolean => {
-  const passwordRegex =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  const passwordRegex = /.{8,}/;
   return passwordRegex.test(password);
 };
 
@@ -71,7 +70,7 @@ const parseClassYear = (classYear: unknown): classYearType => {
 
 const parsePassword = (password: unknown): string => {
   if (!isString(password) || !isPassword(password))
-    throw new Error(`Invalid phone number: ${password}`);
+    throw new Error(`Invalid password: ${password}`);
   return password;
 };
 

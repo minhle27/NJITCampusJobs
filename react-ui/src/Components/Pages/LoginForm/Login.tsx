@@ -3,7 +3,13 @@ import * as Yup from "yup";
 import logo from "../../../assets/NJIT Campus Job-logos_transparent.svg";
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 import { useState } from "react";
-import axios from "axios";
+import { useLoginUserMutation } from "../../../services/apiSlice";
+import { useAppDispatch } from "../../../app/hooks";
+import { setCredentials } from "../../../state/authSlice";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@chakra-ui/react";
+import { getErrorMessage } from "../../../utils";
+// import { getErrorMessage } from "../../../utils";
 interface InputForm {
   email: string;
   password: string;
@@ -11,8 +17,11 @@ interface InputForm {
 }
 
 const Login = () => {
-  const endpoint = "";
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
+  const [loginUser, { isLoading, error }] = useLoginUserMutation();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const toast = useToast();
 
   const formik = useFormik<InputForm>({
     initialValues: {
@@ -31,15 +40,30 @@ const Login = () => {
         "Please enter the password for your NCJ account"
       ),
       accountType: Yup.string().matches(
-        /Student|Employer/,
+        /student|employer/,
         "Please choose account type"
       ),
     }),
-    onSubmit: (value) => {
-      axios
-        .post(endpoint, value)
-        .then((res) => console.log(res))
-        .catch((err) => console.error(err));
+    onSubmit: async (value) => {
+      console.log(value);
+      if (!isLoading) {
+        try {
+          const user = await loginUser(value).unwrap();
+          console.log(user);
+          dispatch(setCredentials(user));
+          navigate("/");
+        } catch (e) {
+          console.log(e);
+          console.log(error);
+          const errorMessage = error && 'data' in error ? JSON.stringify(error.data) : getErrorMessage(e);
+          toast({
+            status: "error",
+            title: "Error",
+            description: errorMessage,
+            isClosable: true,
+          });
+        }
+      }
     },
   });
 
@@ -69,10 +93,10 @@ const Login = () => {
                 <option value="" hidden>
                   Choose account type
                 </option>
-                <option value="Student" className="bg-gray-200">
+                <option value="student" className="bg-gray-200">
                   Student
                 </option>
-                <option value="Employer" className="bg-gray-200">
+                <option value="employer" className="bg-gray-200">
                   Employer
                 </option>
               </select>
@@ -127,9 +151,16 @@ const Login = () => {
             </div>
             <button
               type="submit"
-              className="rounded-full p-2 w-4/5 mx-8 mb-8 placeholder:text-center text-lg bg-black text-white font-semibold"
+              className="rounded p-2 w-4/5 mx-8 mb-8 placeholder:text-center text-lg bg-black text-white font-semibold"
             >
               SIGN IN
+            </button>
+            <button
+              type="button"
+              className="rounded p-2 w-4/5 mx-8 mb-8 placeholder:text-center text-lg bg-gray-500 text-white font-semibold"
+              onClick={() => navigate("/register")}
+            >
+              CREATE NEW ACCOUNT
             </button>
           </div>
         </form>

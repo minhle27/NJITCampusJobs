@@ -2,6 +2,9 @@ import { useFormik } from "formik";
 import FormFrameModal from "../../Modules/FormFrameModal";
 import { ToggleHandle } from "../../Modules/FormFrameModal";
 import * as Yup from "yup";
+import { useCreateNewJobMutation } from "../../../services/apiSlice";
+import { useToast } from "@chakra-ui/react";
+import { getErrorMessage } from "../../../utils";
 
 interface Props {
   jobFormRef: React.MutableRefObject<ToggleHandle | null>;
@@ -16,6 +19,8 @@ interface JobFormFields {
 }
 
 const JobForm = ({ jobFormRef }: Props) => {
+  const [addNewJob, { isLoading, error }] = useCreateNewJobMutation();
+  const toast = useToast();
   const formik = useFormik<JobFormFields>({
     initialValues: {
       title: "",
@@ -26,14 +31,42 @@ const JobForm = ({ jobFormRef }: Props) => {
     },
 
     validationSchema: Yup.object({
-      title: Yup.string().required("Please provide job title"),
-      externalApplication: Yup.string(),
+      title: Yup.string().required(
+        "Please provide job title at least 5 characters"
+      ),
+      externalApplication: Yup.string().url(),
       jobDescription: Yup.string().required("Please provide job Description"),
-      location: Yup.string().required("Please provide job title"),
+      location: Yup.string().required("Please provide location"),
       salary: Yup.number().required("Please provide salary per hour"),
     }),
-    onSubmit: async () => {
-      console.log("Hello");
+    onSubmit: async (value) => {
+      console.log(value);
+      if (!isLoading) {
+        try {
+          await addNewJob(value).unwrap();
+          toast({
+            status: "success",
+            title: "New job.",
+            description: "Successfully saved this job.",
+            isClosable: true,
+          });
+          if (jobFormRef.current) {
+            jobFormRef.current.toggleVisibility();
+          }
+        } catch (err) {
+          console.error("Failed to register new Employer: ", err);
+          const errorMessage =
+            error && "data" in error
+              ? JSON.stringify(error.data)
+              : JSON.stringify(getErrorMessage(err));
+          toast({
+            status: "error",
+            title: "Error",
+            description: errorMessage,
+            isClosable: true,
+          });
+        }
+      }
     },
   });
 
@@ -43,13 +76,13 @@ const JobForm = ({ jobFormRef }: Props) => {
       handleSubmit={formik.handleSubmit}
       ref={jobFormRef}
     >
-      <>
+      <div>
         <div className="field-title">Job Title</div>
         <input
-          className="field-input"
+          className="rounded-full w-full p-1.5 bg-gray-200 hover:bg-gray-300 placeholder:text-center text-lg text-center focus:outline-0"
           placeholder="Job title"
-          id="jobTitle"
-          name="jobTitle"
+          id="title"
+          name="title"
           value={formik.values.title}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
@@ -63,7 +96,7 @@ const JobForm = ({ jobFormRef }: Props) => {
         <div className="field-title">External Application</div>
         <input
           className="rounded-full w-full p-1.5 bg-gray-200 hover:bg-gray-300 placeholder:text-center text-lg text-center focus:outline-0"
-          placeholder="External Application Link"
+          placeholder="External Application Link (Optional)"
           id="externalApplication"
           name="externalApplication"
           value={formik.values.externalApplication}
@@ -80,12 +113,11 @@ const JobForm = ({ jobFormRef }: Props) => {
         </div>
 
         <div className="field-title">Job Description</div>
-        <input
-          className="rounded-md w-full min-h-36 p-1.5 bg-gray-200 hover:bg-gray-300 placeholder:text-center text-lg text-center focus:outline-0"
+        <textarea
+          className="text-justify rounded-lg w-full min-h-56 p-1.5 bg-gray-200 hover:bg-gray-300 placeholder:text-center text-base focus:outline-0"
           placeholder="Job Description"
           id="jobDescription"
           name="jobDescription"
-          type="text"
           value={formik.values.jobDescription}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
@@ -133,7 +165,7 @@ const JobForm = ({ jobFormRef }: Props) => {
         >
           Save
         </button>
-      </>
+      </div>
     </FormFrameModal>
   );
 };

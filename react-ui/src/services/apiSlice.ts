@@ -15,9 +15,11 @@ export const apiSlice = createApi({
       return headers;
     },
   }),
+  tagTypes: ['Post'],
   endpoints: (builder) => ({
     getEmployerPosts: builder.query<Array<JobPost>, string>({
       query: (employerId) => `/post/employer/${employerId}`,
+      providesTags: ['Post']
     }),
     getEmployer: builder.query<Employer, string>({
       query: (employerId) => `/employer/${employerId}`,
@@ -28,6 +30,14 @@ export const apiSlice = createApi({
         method: "POST",
         body: registerInfo,
       }),
+    }),
+    createNewJob: builder.mutation({
+      query: (newJob) => ({
+        url: "/post",
+        method: "POST",
+        body: newJob,
+      }),
+      invalidatesTags: ['Post']
     }),
     loginUser: builder.mutation({
       query: (loginInfo) => ({
@@ -44,4 +54,5 @@ export const {
   useLoginUserMutation,
   useGetEmployerPostsQuery,
   useGetEmployerQuery,
+  useCreateNewJobMutation
 } = apiSlice;

@@ -31,3 +31,11 @@ export interface LoginInfo {
   password: string;
   accountType: string;
 }
+
+export interface NewJobPost {
+  title: string;
+  externalApplication: string;
+  jobDescription: string;
+  location: string;
+  salary: number;
+}

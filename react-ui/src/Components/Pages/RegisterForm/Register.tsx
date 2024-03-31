@@ -2,10 +2,11 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import logo from "../../../assets/NJIT Campus Job-logos_transparent.svg";
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
-import { Fragment, useState } from "react";
+import { Fragment, useRef, useState } from "react";
 import RegisterStudent from "./RegisterStudent";
 import RegisterEmployer from "./RegisterEmployer";
 import { useNavigate } from "react-router-dom";
+import { ToggleHandle } from "../../Modules/FormFrameModal";
 
 export interface GeneralInfoType {
   accountType: string;
@@ -16,9 +17,10 @@ export interface GeneralInfoType {
 
 const Register = () => {
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
-  const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [newUser, setNewUser] = useState<GeneralInfoType | null>(null);
   const navigate = useNavigate();
+  const registerStudentRef = useRef<ToggleHandle>(null);
+  const registerEmployerRef = useRef<ToggleHandle>(null);
 
   const formik = useFormik<GeneralInfoType>({
     initialValues: {
@@ -58,7 +60,17 @@ const Register = () => {
     onSubmit: (value) => {
       setNewUser(value);
       console.log(value);
-      setModalVisible(true);
+      if (
+        formik.values.accountType === "employer" &&
+        registerEmployerRef.current
+      ) {
+        registerEmployerRef.current.toggleVisibility();
+      } else if (
+        formik.values.accountType === "student" &&
+        registerStudentRef.current
+      ) {
+        registerStudentRef.current.toggleVisibility();
+      }
     },
   });
 
@@ -180,15 +192,13 @@ const Register = () => {
       </div>
       {formik.values.accountType === "student" ? (
         <RegisterStudent
-          isVisible={modalVisible}
           newUser={newUser!}
-          onClose={() => setModalVisible(false)}
+          registerStudentRef={registerStudentRef}
         />
       ) : (
         <RegisterEmployer
-          isVisible={modalVisible}
           newUser={newUser!}
-          onClose={() => setModalVisible(false)}
+          registerEmployerRef={registerEmployerRef}
         />
       )}
     </Fragment>

@@ -10,14 +10,16 @@ import unknownEndpoint from "./middleware/unknownEndpoints";
 import errorHandler from "./middleware/errorHandler";
 
 import authRouter from "./routes/auth";
+import postRouter from "./routes/post";
+import employerRouter from "./routes/employer";
 
 const app = express();
 
 // MONGODB connection
 mongoose.set("strictQuery", false);
-console.log("connecting to", config.MONGODB_URI);
+console.log("connecting to", config.TEST_MONGODB_URI);
 mongoose
-  .connect(config.MONGODB_URI as string)
+  .connect(config.TEST_MONGODB_URI as string)
   .then(() => {
     console.log("connected to MongoDB");
   })
@@ -49,6 +51,8 @@ app.get("/api/ping", (_req, res) => {
 });
 
 app.use("/api/auth", authRouter);
+app.use("/api/post", postRouter);
+app.use("/api/employer", employerRouter);
 
 // Middleware
 app.use(unknownEndpoint);

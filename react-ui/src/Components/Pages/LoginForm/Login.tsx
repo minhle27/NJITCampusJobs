@@ -55,7 +55,7 @@ const Login = () => {
         } catch (e) {
           console.log(e);
           console.log(error);
-          const errorMessage = error && 'data' in error ? JSON.stringify(error.data) : getErrorMessage(e);
+          const errorMessage = error && 'data' in error ? JSON.stringify(error.data) : JSON.stringify(getErrorMessage(e));
           toast({
             status: "error",
             title: "Error",

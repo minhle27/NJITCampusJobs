@@ -8,11 +8,11 @@
   }
 
   .field-title {
-    @apply font-bold block p-2
+    @apply font-bold block p-2;
   }
 
   .field-input {
-    @apply rounded-full w-full p-1.5 bg-gray-200 hover:bg-gray-300 placeholder:text-center text-lg text-center focus:outline-0
+    @apply rounded-full w-full p-1.5 bg-gray-200 hover:bg-gray-300 placeholder:text-center text-lg text-center focus:outline-0;
   }
 }
 
@@ -92,4 +92,12 @@
   left: 0;
   bottom: 0;
   right: 0;
+}
+
+.customNavLink {
+  padding: 1% 2%;
+  margin: 0 1%;
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 600;
 }

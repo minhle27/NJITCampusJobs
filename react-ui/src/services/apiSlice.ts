@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../app/store";
-import { JobPost } from "../types";
 import { Employer } from "../types";
+import { JobPost } from "../types";
 
 export const apiSlice = createApi({
   reducerPath: "api",
@@ -15,11 +15,14 @@ export const apiSlice = createApi({
       return headers;
     },
   }),
-  tagTypes: ['Post'],
+  tagTypes: ["Post"],
   endpoints: (builder) => ({
-    getEmployerPosts: builder.query<Array<JobPost>, string>({
+    getEmployerPosts: builder.query<JobPost[], string>({
       query: (employerId) => `/post/employer/${employerId}`,
-      providesTags: ['Post']
+      providesTags: (result = []) => [
+        "Post",
+        ...result.map(({ id }: { id: string }) => ({ type: "Post" as const, id })),
+      ],
     }),
     getEmployer: builder.query<Employer, string>({
       query: (employerId) => `/employer/${employerId}`,
@@ -37,7 +40,7 @@ export const apiSlice = createApi({
         method: "POST",
         body: newJob,
       }),
-      invalidatesTags: ['Post']
+      invalidatesTags: ["Post"],
     }),
     loginUser: builder.mutation({
       query: (loginInfo) => ({
@@ -45,6 +48,18 @@ export const apiSlice = createApi({
         method: "POST",
         body: loginInfo,
       }),
+    }),
+    editPost: builder.mutation({
+      query: (post) => {
+        const id = post.id;
+        delete post.id;
+        return ({
+          url: `/post/${id}`,
+          method: "PATCH",
+          body: post,
+        })
+      },
+      invalidatesTags: (_result, _error, arg) => [{ type: "Post", id: arg.id }],
     }),
   }),
 });
@@ -54,5 +69,6 @@ export const {
   useLoginUserMutation,
   useGetEmployerPostsQuery,
   useGetEmployerQuery,
-  useCreateNewJobMutation
+  useCreateNewJobMutation,
+  useEditPostMutation,
 } = apiSlice;

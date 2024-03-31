@@ -4,11 +4,16 @@ const postRouter = express.Router();
 import postController from "../controllers/postController";
 import verifyToken from "../middleware/verifyToken";
 
-//GET ALL POST FROM A USER
 postRouter.get(
   "/employer/:id",
   verifyToken,
   postController.getAllPostsFromAnEmployer
+);
+
+postRouter.patch(
+  "/:id",
+  verifyToken,
+  postController.updateAPost
 );
 
 postRouter.post(

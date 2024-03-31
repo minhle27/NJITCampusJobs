@@ -11,6 +11,7 @@ import HomePage from "./Components/Pages/HomePage/HomePage.tsx";
 import { useAuth } from "./hooks/useAuth.ts";
 import RequireAuth from "./Components/Modules/RequireAuth.tsx";
 import EmployerDashboard from "./Components/Pages/EmployerDashboard/index.tsx";
+import TrackApplicants from "./Components/Pages/TrackApplicants/index.tsx";
 
 const App = () => {
   const auth = useAuth();
@@ -24,6 +25,14 @@ const App = () => {
             element={
               <RequireAuth>
                 <HomePage />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/trackjob/:id"
+            element={
+              <RequireAuth>
+                <TrackApplicants />
               </RequireAuth>
             }
           />

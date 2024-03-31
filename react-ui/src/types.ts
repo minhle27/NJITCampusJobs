@@ -45,6 +45,7 @@ export interface JobPost {
     pending: [];
     rejected: [];
   };
+  externalApplication: string;
   employer: string;
   title: string;
   jobDescription: string;

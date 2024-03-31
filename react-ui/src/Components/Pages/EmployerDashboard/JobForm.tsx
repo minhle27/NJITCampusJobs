@@ -2,15 +2,15 @@ import { useFormik } from "formik";
 import FormFrameModal from "../../Modules/FormFrameModal";
 import { ToggleHandle } from "../../Modules/FormFrameModal";
 import * as Yup from "yup";
-import { useCreateNewJobMutation } from "../../../services/apiSlice";
-import { useToast } from "@chakra-ui/react";
-import { getErrorMessage } from "../../../utils";
 
 interface Props {
   jobFormRef: React.MutableRefObject<ToggleHandle | null>;
+  initialFormValues: JobFormFields;
+  isUpdate: boolean;
+  handleSubmit: (value: JobFormFields) => Promise<void>;
 }
 
-interface JobFormFields {
+export interface JobFormFields {
   title: string;
   externalApplication: string;
   jobDescription: string;
@@ -18,17 +18,14 @@ interface JobFormFields {
   salary: string;
 }
 
-const JobForm = ({ jobFormRef }: Props) => {
-  const [addNewJob, { isLoading, error }] = useCreateNewJobMutation();
-  const toast = useToast();
+const JobForm = ({
+  jobFormRef,
+  initialFormValues,
+  isUpdate,
+  handleSubmit,
+}: Props) => {
   const formik = useFormik<JobFormFields>({
-    initialValues: {
-      title: "",
-      externalApplication: "",
-      jobDescription: "",
-      location: "",
-      salary: "",
-    },
+    initialValues: initialFormValues,
 
     validationSchema: Yup.object({
       title: Yup.string().required(
@@ -39,35 +36,7 @@ const JobForm = ({ jobFormRef }: Props) => {
       location: Yup.string().required("Please provide location"),
       salary: Yup.number().required("Please provide salary per hour"),
     }),
-    onSubmit: async (value) => {
-      console.log(value);
-      if (!isLoading) {
-        try {
-          await addNewJob(value).unwrap();
-          toast({
-            status: "success",
-            title: "New job.",
-            description: "Successfully saved this job.",
-            isClosable: true,
-          });
-          if (jobFormRef.current) {
-            jobFormRef.current.toggleVisibility();
-          }
-        } catch (err) {
-          console.error("Failed to register new Employer: ", err);
-          const errorMessage =
-            error && "data" in error
-              ? JSON.stringify(error.data)
-              : JSON.stringify(getErrorMessage(err));
-          toast({
-            status: "error",
-            title: "Error",
-            description: errorMessage,
-            isClosable: true,
-          });
-        }
-      }
-    },
+    onSubmit: handleSubmit,
   });
 
   return (
@@ -163,7 +132,7 @@ const JobForm = ({ jobFormRef }: Props) => {
           type="submit"
           className="rounded-full text-center mt-5 mb-5 p-2 w-full placeholder:text-center text-lg bg-black text-white cursor-pointer font-semibold"
         >
-          Save
+          {isUpdate ? "Save" : "Update"}
         </button>
       </div>
     </FormFrameModal>

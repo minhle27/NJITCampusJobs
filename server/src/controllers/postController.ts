@@ -9,22 +9,29 @@ const postController = {
     req: AuthenticatedRequest,
     res: Response
   ) => {
-    const employer = await employerModel.findById(req.params.id).populate('jobPosts');
+    const employer = await employerModel
+      .findById(req.params.id)
+      .populate("jobPosts");
     if (!employer) {
       return res.status(404).json({ error: "User Not Found" });
     }
     return res.status(200).json(employer?.jobPosts);
   },
 
+  updateAPost: async (req: AuthenticatedRequest, res: Response) => {
+    const newPost = fieldValidate.processNewPost(req.body);
+    const post = await jobModel.findById(req.params.id);
+    if (!post) {
+      return res.status(404).json({ error: "Post Not Found" });
+    }
+    await post.updateOne({ $set: newPost });
+    return res.status(200).json("Post has been updated");
+  },
+
   createNewPost: async (req: AuthenticatedRequest, res: Response) => {
     const job = fieldValidate.processNewPost(req.body);
-    const {
-      title,
-      externalApplication,
-      jobDescription,
-      location,
-      salary,
-    } = job;
+    const { title, externalApplication, jobDescription, location, salary } =
+      job;
 
     const user = await employerModel.findById(req.user);
     if (!user) return res.status(404).json({ error: "User Not Found" });

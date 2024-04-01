@@ -1,8 +1,8 @@
 import { To, useNavigate } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth.ts";
-import Logo from "../../../assets/NCJ-logos_transparent.svg";
-import ProfileImage from "../../../assets/Sample-Profile.svg";
-import NotificationImage from "../../../assets/NotificationImage.svg";
+import { useAuth } from "./hooks/useAuth.ts";
+import Logo from "./assets/NCJ-logos_transparent.svg"
+import ProfileImage from "./assets/Sample-Profile.svg";
+import NotificationImage from "./assets/NotificationImage.svg";
 
 const NavBar = () => {
   const auth = useAuth();
@@ -19,7 +19,7 @@ const NavBar = () => {
           onClick={() => handleClick("/Logo")}
           alt="Logo"
         />
-        {["/Register", "/Profile", "/Calendar", "/Inbox", "/Application"].map(
+        {["/Jobs", "/Profile", "/Calendar", "/Inbox", "/Applications"].map(
           (route) => (
             <button
               key={route}
@@ -36,15 +36,8 @@ const NavBar = () => {
           role="alert"
           className="absolute top-0 right-0 z-10 bg-red-600 rounded-full p-1 text-xs mr-12"
         ></div>
-        {["/Profile", "/Profile"].map((route) => (
-          <img
-            key={route}
-            src={route === "/Profile" ? NotificationImage : ProfileImage}
-            className="mr-4"
-            onClick={() => handleClick(route.substring(1))}
-            alt={route === "/Profile" ? "Notification" : "Profile"}
-          />
-        ))}
+        <img src={NotificationImage} className="mr-4" />
+        <img src={ProfileImage} className="" />
       </div>
     </nav>
   );

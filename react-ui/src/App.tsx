@@ -12,7 +12,7 @@ import { useAuth } from "./hooks/useAuth.ts";
 import RequireAuth from "./Components/Modules/RequireAuth.tsx";
 import EmployerDashboard from "./Components/Pages/EmployerDashboard/index.tsx";
 import TrackApplicants from "./Components/Pages/TrackApplicants/index.tsx";
-import NavBar from "./NavBar.tsx";
+import NavBar from "./Components/Modules/NavBar.tsx";
 
 const App = () => {
   const auth = useAuth();

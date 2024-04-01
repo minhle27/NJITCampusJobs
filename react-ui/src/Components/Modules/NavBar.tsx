@@ -1,5 +1,5 @@
 import { To, useNavigate } from "react-router-dom";
-import { useAuth } from "./hooks/useAuth.ts";
+import { useAuth } from "../../hooks/useAuth.ts";
 import Logo from "./assets/NCJ-logos_transparent.svg"
 import ProfileImage from "./assets/Sample-Profile.svg";
 import NotificationImage from "./assets/NotificationImage.svg";

@@ -5,6 +5,9 @@ import { useParams } from "react-router-dom";
 import { createSelector } from "@reduxjs/toolkit";
 import { useMemo } from "react";
 import { JobPost } from "../../../types";
+import TrackBoard from "./TrackBoard";
+import ApplicantsTrackerLogo from "./ApplicantsTrackerLogo";
+import { Spinner } from "@chakra-ui/react";
 
 const TrackApplicants = () => {
   const { id: postId } = useParams();
@@ -18,24 +21,37 @@ const TrackApplicants = () => {
     );
   }, []);
 
-  const { postById } = useGetEmployerPostsQuery(employerId!, {
-    selectFromResult: (result) => ({
-      ...result,
-      postById: selectPostByID(result, postId),
-    }),
-  });
+  const { postById, isLoading, isSuccess, isError, error } = useGetEmployerPostsQuery(
+    employerId!,
+    {
+      selectFromResult: (result) => ({
+        ...result,
+        postById: selectPostByID(result, postId),
+      }),
+    }
+  );
 
   if (postById?.employer !== employerId) {
-    return (
-      <div>
-        Not allowed to access this page
-      </div>
-    );
+    return <div>Not allowed to access this page</div>;
+  }
+
+  let trackBoardContent;
+  if (isLoading) {
+    trackBoardContent = <Spinner />;
+  } else if (isSuccess) {
+    trackBoardContent = <TrackBoard post={postById!} />;
+  } else if (isError) {
+    trackBoardContent = <div>{error.toString()}</div>;
   }
 
   return (
     <Protected id={employerId!}>
-      <div>{postById?.jobDescription}</div>
+      <div className="flex">
+        <div className="flex flex-col w-fit">
+          <ApplicantsTrackerLogo />
+        </div>
+        {trackBoardContent}
+      </div>
     </Protected>
   );
 };

@@ -41,9 +41,9 @@ export interface ErrorType {
 
 export interface JobPost {
   applicants: {
-    accepted: [];
-    pending: [];
-    rejected: [];
+    accepted: Student[];
+    pending: Student[];
+    rejected: Student[];
   };
   externalApplication: string;
   employer: string;

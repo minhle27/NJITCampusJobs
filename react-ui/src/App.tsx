@@ -17,7 +17,7 @@ import NavBar from "./Components/Modules/NavBar.tsx";
 const App = () => {
   const auth = useAuth();
   const noNavBar = (path: string) => {
-    return (path === "/login" || path === "/register");
+    return path === "/login" || path === "/register";
   };
   const renderNavBar = () => {
     return <NavBar />;

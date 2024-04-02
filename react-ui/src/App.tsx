@@ -12,6 +12,7 @@ import { useAuth } from "./hooks/useAuth.ts";
 import RequireAuth from "./Components/Modules/RequireAuth.tsx";
 import EmployerDashboard from "./Components/Pages/EmployerDashboard/index.tsx";
 import TrackApplicants from "./Components/Pages/TrackApplicants/index.tsx";
+import FeedPage from "./Components/Pages/FeedPage/FeedPage.tsx";
 
 const App = () => {
   const auth = useAuth();
@@ -51,6 +52,15 @@ const App = () => {
           <Route
             path="/register"
             element={auth.user ? <Navigate to="/" /> : <Register />}
+          />
+
+          <Route
+            path="/feed"
+            element={
+              <RequireAuth>
+                <FeedPage />
+              </RequireAuth>
+            }
           />
         </Routes>
       </Router>

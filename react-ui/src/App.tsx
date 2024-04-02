@@ -16,16 +16,13 @@ import NavBar from "./Components/Modules/NavBar.tsx";
 
 const App = () => {
   const auth = useAuth();
-  const noNavBar = (path: string) => {
-    return path === "/login" || path === "/register";
-  };
-  const renderNavBar = () => {
-    return <NavBar />;
-  };
+  const isLoginPage = window.location.pathname === "/login";
+  const isRegisterPage = window.location.pathname === "/register";
 
   return (
     <>
       <Router>
+        {auth.user && !isLoginPage && !isRegisterPage && <NavBar />}
         <Routes>
           <Route
             path="/"
@@ -60,7 +57,6 @@ const App = () => {
             element={auth.user ? <Navigate to="/" /> : <Register />}
           />
         </Routes>
-        {noNavBar(window.location.pathname) ? null : renderNavBar()}
       </Router>
     </>
   );

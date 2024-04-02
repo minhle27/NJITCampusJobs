@@ -3,24 +3,26 @@ import { useAuth } from "../../hooks/useAuth.ts";
 import Logo from "../../assets/NCJ-logos_transparent.svg";
 import ProfileImage from "../../assets/Sample-Profile.svg";
 import NotificationImage from "../../assets/NotificationImage.svg";
+import { useAppDispatch } from "../../app/hooks";
+import { setCredentials } from "../../state/authSlice.ts";
 // import { useGetEmployerQuery } from "../../services/apiSlice.ts";
 
 const NavBar = () => {
   const auth = useAuth();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const handleClick = (to: To) =>
     auth.user ? navigate(to) : navigate("/login");
 
+  const handleLogout = () => {
+    dispatch(setCredentials({ user: null, token: null }));
+  };
   //const { data: employer } = useGetEmployerQuery(auth.user!.id);
 
   return (
     <nav className="sticky top-0 z-[20] mx-auto flex w-full h-1/6 items-center justify-between shadow-md border-black">
       <div className="flex items-center">
-        <img
-          src={Logo}
-          className=""
-          alt="Logo"
-        />
+        <img src={Logo} className="" alt="Logo" />
         {["/Jobs", "/Profile", "/Calendar", "/Inbox", "/Applications"].map(
           (route) => (
             <button
@@ -40,6 +42,9 @@ const NavBar = () => {
       </div>
       <div className="flex justify-end mr-6 relative">
         <div className="flex">
+          <button onClick={handleLogout} className="customNavLink">
+            Logout
+          </button>
           <img src={NotificationImage} className="mr-4" />
           {/* <div
             role="alert"

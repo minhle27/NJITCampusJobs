@@ -85,6 +85,17 @@ jobSchema.set("toJSON", {
   },
 });
 
+applicationSchema.set("toJSON", {
+  transform: (_document, returnedObject) => {
+    if ("_id" in returnedObject) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+      returnedObject.id = returnedObject._id.toString();
+      delete returnedObject._id;
+      delete returnedObject.__v;
+    }
+  },
+});
+
 const jobModel = mongoose.model<jobSchemaInferType>("Job", jobSchema);
 
 export default jobModel;

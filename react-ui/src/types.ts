@@ -41,9 +41,9 @@ export interface ErrorType {
 
 export interface JobPost {
   applicants: {
-    accepted: Student[];
-    pending: Student[];
-    rejected: Student[];
+    accepted: Application[];
+    pending: Application[];
+    rejected: Application[];
   };
   externalApplication: string;
   employer: string;
@@ -55,4 +55,14 @@ export interface JobPost {
   createdAt: string;
   updatedAt: string;
   id: string;
+}
+
+export interface Application {
+  student: string;
+  resumeUrl: string;
+  id: string;
+}
+
+export interface ApplicationWithStatus extends Application {
+  status: string;
 }

@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../app/store";
-import { Employer } from "../types";
+import { Employer, Student } from "../types";
 import { JobPost } from "../types";
 
 export const apiSlice = createApi({
@@ -26,6 +26,9 @@ export const apiSlice = createApi({
     }),
     getEmployer: builder.query<Employer, string>({
       query: (employerId) => `/employer/${employerId}`,
+    }),
+    getStudent: builder.query<Student, string>({
+      query: (studentId) => `/student/${studentId}`,
     }),
     addNewUser: builder.mutation({
       query: (registerInfo) => ({
@@ -69,6 +72,7 @@ export const {
   useLoginUserMutation,
   useGetEmployerPostsQuery,
   useGetEmployerQuery,
+  useGetStudentQuery,
   useCreateNewJobMutation,
   useEditPostMutation,
 } = apiSlice;

@@ -47,7 +47,7 @@ const TrackApplicants = () => {
   return (
     <Protected id={employerId!}>
       <div className="flex">
-        <div className="flex flex-col w-fit">
+        <div className="flex flex-col w-fit max-w-fit">
           <ApplicantsTrackerLogo />
         </div>
         {trackBoardContent}

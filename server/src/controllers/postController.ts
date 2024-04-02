@@ -49,6 +49,14 @@ const postController = {
     await user.save();
     return res.status(200).json(savedJob);
   },
+
+  getAllPosts: async (_req: AuthenticatedRequest, res: Response) => {
+    const allJobPosts = await jobModel.find({});
+    if (!allJobPosts) {
+      return res.status(400).json({ error: "Fetching posts failed" });
+    }
+    return res.status(200).json(allJobPosts);
+  },
 };
 
 export default postController;

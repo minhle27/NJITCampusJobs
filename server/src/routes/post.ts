@@ -10,16 +10,10 @@ postRouter.get(
   postController.getAllPostsFromAnEmployer
 );
 
-postRouter.patch(
-  "/:id",
-  verifyToken,
-  postController.updateAPost
-);
+postRouter.patch("/:id", verifyToken, postController.updateAPost);
 
-postRouter.post(
-  "/",
-  verifyToken,
-  postController.createNewPost
-);
+postRouter.post("/", verifyToken, postController.createNewPost);
+
+postRouter.get("/", verifyToken, postController.getAllPosts);
 
 export default postRouter;

@@ -12,13 +12,17 @@ import { useAuth } from "./hooks/useAuth.ts";
 import RequireAuth from "./Components/Modules/RequireAuth.tsx";
 import EmployerDashboard from "./Components/Pages/EmployerDashboard/index.tsx";
 import TrackApplicants from "./Components/Pages/TrackApplicants/index.tsx";
+import NavBar from "./Components/Modules/NavBar.tsx";
 
 const App = () => {
   const auth = useAuth();
+  const isLoginPage = window.location.pathname === "/login";
+  const isRegisterPage = window.location.pathname === "/register";
 
   return (
     <>
       <Router>
+        {auth.user && !isLoginPage && !isRegisterPage && <NavBar />}
         <Routes>
           <Route
             path="/"

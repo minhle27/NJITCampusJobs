@@ -7,7 +7,7 @@ const employerController = {
     req: AuthenticatedRequest,
     res: Response
   ) => {
-    const employer = await employerModel.findById(req.params.id).lean();
+    const employer = await employerModel.findById(req.params.id);
     return res.status(200).json(employer);
   },
 };

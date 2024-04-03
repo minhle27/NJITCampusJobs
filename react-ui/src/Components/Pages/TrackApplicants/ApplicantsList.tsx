@@ -1,31 +1,40 @@
 import { ApplicationWithStatus, JobPost } from "../../../types";
-import { useGetStudentQuery } from "../../../services/apiSlice";
-import { Spinner } from "@chakra-ui/react";
 
 const Applicant = ({ application }: { application: ApplicationWithStatus }) => {
-  const {
-    data: student,
-    isLoading,
-    isError,
-    error,
-    isSuccess,
-  } = useGetStudentQuery(application.student);
+  const handleClick = () => {
+    console.log("hello");
+  };
 
-  let content;
-  if (isLoading) {
-    content = <Spinner />;
-  } else if (isSuccess && student) {
-    content = (
-      <div className="my-5 bg-green-300 p-3 rounded-md">
-        <p>{student.email}</p>
-      </div>
-    );
-    console.log(content);
-  } else if (isError) {
-    content = <div>{error.toString()}</div>;
+  const status = application.status;
+  const student = application.student;
+
+  let styleByStatus =
+    "my-4 p-4 rounded-md border-solid border-2 border-slate-400 flex ";
+  if (status === "accepted") {
+    styleByStatus += "bg-lime-100";
+  } else if (status === "rejected") {
+    styleByStatus += "bg-rose-200";
+  } else {
+    styleByStatus += "bg-neutral-300";
   }
 
-  return content;
+  return (
+    <div className={styleByStatus}>
+      <div className="flex items-center">
+        <img
+          src={student.profilePicture.fileUrl}
+          className="object-contain w-11 h-11 rounded-full mr-3"
+          alt="profilePicture"
+        />
+        <p className="font-semibold">{student.fullName}</p>
+      </div>
+      <div className="ml-auto">
+        <button onClick={handleClick} className="btn-2">
+          View Details
+        </button>
+      </div>
+    </div>
+  );
 };
 
 const ApplicantsList = ({
@@ -40,20 +49,32 @@ const ApplicantsList = ({
   const pendingList = post.applicants.pending;
 
   const allList: ApplicationWithStatus[] = acceptedList
-    .map((student) => ({ ...student, status: "accepted" }))
-    .concat(rejectedList.map((student) => ({ ...student, status: "rejected" })))
-    .concat(pendingList.map((student) => ({ ...student, status: "pending" })));
+    .map((application) => ({ ...application, status: "accepted" }))
+    .concat(
+      rejectedList.map((application) => ({
+        ...application,
+        status: "rejected",
+      }))
+    )
+    .concat(
+      pendingList.map((application) => ({ ...application, status: "pending" }))
+    );
 
-  console.log(searchValue);
   if (allList.length <= 0) {
     return (
       <div className="text-center font-semibold">No applicants to display</div>
     );
   }
 
+  const bySearchField = (p: ApplicationWithStatus) =>
+    p.student.fullName.toLowerCase().includes(searchValue.toLowerCase());
+  const applicationsToShow =
+    searchValue && allList ? allList.filter(bySearchField) : allList;
+
+  console.log(searchValue);
   return (
-    <div className="flex flex-col">
-      {allList.map((application) => {
+    <div className="flex flex-col overflow-auto">
+      {applicationsToShow.map((application) => {
         return <Applicant key={application.id} application={application} />;
       })}
     </div>

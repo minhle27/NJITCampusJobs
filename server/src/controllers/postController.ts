@@ -21,7 +21,7 @@ const postController = {
           },
         },
       },
-    }).lean();
+    });
     if (!employer) {
       return res.status(404).json({ error: "User Not Found" });
     }

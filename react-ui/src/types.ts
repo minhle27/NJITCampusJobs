@@ -6,9 +6,14 @@ export interface BaseUser {
   fullName: string;
   phone: string;
   profileDescription?: string;
-  profilePicture: {
-    fileUrl: string;
-  };
+  profilePicture: FileAsset;
+}
+
+interface FileAsset {
+  fileUrl: string;
+  cloudinaryId: string;
+  isDefault: boolean;
+  id: string;
 }
 
 export interface Student extends BaseUser {
@@ -58,7 +63,10 @@ export interface JobPost {
 }
 
 export interface Application {
-  student: string;
+  student: {
+    fullName: string;
+    profilePicture: FileAsset;
+  };
   resumeUrl: string;
   id: string;
 }

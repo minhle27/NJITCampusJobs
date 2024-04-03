@@ -9,9 +9,19 @@ const postController = {
     req: AuthenticatedRequest,
     res: Response
   ) => {
-    const employer = await employerModel
-      .findById(req.params.id)
-      .populate("jobPosts");
+    const employer = await employerModel.findById(req.params.id).populate({
+      path: "jobPosts",
+      populate: {
+        path: "applicants",
+        populate: {
+          path: "accepted rejected pending",
+          populate: {
+            path: "student",
+            select: "fullName profilePicture"
+          },
+        },
+      },
+    }).lean();
     if (!employer) {
       return res.status(404).json({ error: "User Not Found" });
     }

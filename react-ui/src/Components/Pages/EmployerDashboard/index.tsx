@@ -3,7 +3,7 @@ import SearchBar from "../../Modules/SearchBar";
 import { useParams } from "react-router-dom";
 import JobsList from "./JobsList";
 import Protected from "../../Modules/Protected";
-import JobForm from "./JobForm";
+import JobForm, { JobFormFields } from "./JobForm";
 import { ToggleHandle } from "../../Modules/FormFrameModal";
 import { useCreateNewJobMutation } from "../../../services/apiSlice";
 import { useToast } from "@chakra-ui/react";
@@ -30,11 +30,11 @@ const EmployerDashboard = () => {
     salary: "",
   };
 
-  const handleSubmitNewJob = async (value: unknown) => {
-    console.log(value);
+  const handleSubmitNewJob = async (values: JobFormFields) => {
+    console.log(values);
     if (!isLoading) {
       try {
-        await addNewJob(value).unwrap();
+        await addNewJob(values).unwrap();
         toast({
           status: "success",
           title: "New job.",

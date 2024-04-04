@@ -2,6 +2,7 @@ import { useFormik } from "formik";
 import FormFrameModal from "../../Modules/FormFrameModal";
 import { ToggleHandle } from "../../Modules/FormFrameModal";
 import * as Yup from "yup";
+import { useToast } from "@chakra-ui/react";
 
 interface Props {
   jobFormRef: React.MutableRefObject<ToggleHandle | null>;
@@ -24,6 +25,7 @@ const JobForm = ({
   isUpdate,
   handleSubmit,
 }: Props) => {
+  const toast = useToast();
   const formik = useFormik<JobFormFields>({
     initialValues: initialFormValues,
 
@@ -36,7 +38,18 @@ const JobForm = ({
       location: Yup.string().required("Please provide location"),
       salary: Yup.number().required("Please provide salary per hour"),
     }),
-    onSubmit: handleSubmit,
+    onSubmit: () =>{
+      if (formik.dirty) {
+        handleSubmit(formik.values);
+      } else {
+        toast({
+          status: "warning",
+          title: "Warning",
+          description: "Make modification before save changes",
+          isClosable: true,
+        });
+      }
+    },
   });
 
   return (

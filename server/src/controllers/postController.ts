@@ -39,6 +39,39 @@ const postController = {
     return res.status(200).json("Post has been updated");
   },
 
+  deleteAPost: async (req: AuthenticatedRequest, res: Response) => {
+    const post = await jobModel.findById(req.params.id);
+    if (!post) {
+      return res.status(404).json({ error: "Post Not Found" });
+    }
+    await jobModel.findByIdAndDelete(req.params.id);
+
+    // delete this post reference in employer and student's applied job
+    await employerModel.updateOne(
+      { _id: post.employer },
+      { $pull: { jobPosts: post._id } }
+    );
+
+    await studentModel.updateMany(
+      {
+        $or: [
+          { 'appliedJobs.accepted': post._id },
+          { 'appliedJobs.pending': post._id },
+          { 'appliedJobs.rejected': post._id }
+        ]
+      },
+      {
+        $pull: {
+          'appliedJobs.accepted': post._id,
+          'appliedJobs.pending': post._id,
+          'appliedJobs.rejected': post._id
+        }
+      },
+    );
+
+    return res.status(204).end();
+  },
+
   updateApplicantStatus: async (req: AuthenticatedRequest, res: Response) => {
     const application = fieldValidate.processNewStatus(req.body);
     const post = await jobModel.findById(req.params.id);

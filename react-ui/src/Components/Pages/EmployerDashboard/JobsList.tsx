@@ -18,6 +18,7 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   Button,
+  Spinner,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -187,7 +188,7 @@ const JobsList = ({ employerId, searchValue }: JobsListProps) => {
       </PostExcerpt>
     ));
   } else {
-    content = <div>Posts is not available</div>;
+    content = <Spinner />;
   }
 
   return (

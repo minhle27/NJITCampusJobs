@@ -41,7 +41,7 @@ const JobForm = ({
 
   return (
     <FormFrameModal
-      title={"Create A New Job"}
+      title={isUpdate ? "Edit This Job" : "Create A New Job"}
       handleSubmit={formik.handleSubmit}
       ref={jobFormRef}
     >

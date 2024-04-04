@@ -4,13 +4,16 @@ import Logo from "../../assets/NCJ-logos_transparent.svg";
 import ProfileImage from "../../assets/Sample-Profile.svg";
 import NotificationImage from "../../assets/NotificationImage.svg";
 import { useAppDispatch } from "../../app/hooks";
-import { setCredentials } from "../../state/authSlice.ts";
+import { setCredentials } from "../../state/authSlice.ts"
+import { useGetAccountType } from "../../hooks/useGetAccounType.ts";
 // import { useGetEmployerQuery } from "../../services/apiSlice.ts";
 
 const NavBar = () => {
   const auth = useAuth();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const accountType = useGetAccountType();
+
   const handleClick = (to: To) =>
     auth.user ? navigate(to) : navigate("/login");
 
@@ -20,19 +23,22 @@ const NavBar = () => {
   //const { data: employer } = useGetEmployerQuery(auth.user!.id);
 
   return (
-    <nav className="sticky top-0 z-[20] mx-auto flex w-full h-1/6 items-center justify-between shadow-md border-black">
+    <nav className="mx-auto flex w-full items-center justify-between shadow-md border-black">
       <div className="flex items-center">
-        <img src={Logo} className="" alt="Logo" />
-        {["/Jobs", "/Profile", "/Calendar", "/Inbox", "/Applications"].map(
-          (route) => (
+        <img src={Logo} className="ml-2" alt="Logo" />
+        {["/Jobs", "/Profile", "/Calendar", "/Inbox", accountType === "employer" ? "/Dashboard" : "/Application"].map(
+          (route, id) => (
             <button
-              key={route}
+              key={id}
               className="customNavLink"
               onClick={() => {
                 if (route === "/Jobs") {
                   return handleClick("/");
                 }
-                return handleClick(route.substring(1));
+                if (route === "/Dashboard") {
+                  return handleClick(`/dashboard/${auth.user!.id}`);
+                }
+                return handleClick(route.substring(1).toLowerCase());
               }}
             >
               {route.substring(1)}

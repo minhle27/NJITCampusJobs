@@ -2,6 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
   useEditPostMutation,
   useGetEmployerPostsQuery,
+  useDeletePostMutation
 } from "../../../services/apiSlice";
 import Protected from "../../Modules/Protected";
 import PostExcerpt from "./PostExcerpt";
@@ -9,9 +10,21 @@ import { JobPost } from "../../../types";
 import { useRef } from "react";
 import { ToggleHandle } from "../../Modules/FormFrameModal";
 import JobForm from "./JobForm";
-import { useToast } from "@chakra-ui/react";
+import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
+  Button,
+  Spinner,
+  useDisclosure,
+  useToast,
+} from "@chakra-ui/react";
 import { getErrorMessage } from "../../../utils";
 import { JobFormFields } from "./JobForm";
+import { DeleteOutlined } from "@ant-design/icons";
 
 interface JobsListProps {
   employerId: string;
@@ -23,7 +36,10 @@ const EmployerPostOptions = ({ post }: { post: JobPost }) => {
   const navigate = useNavigate();
   const jobFormRef = useRef<ToggleHandle>(null);
   const [updatePost, { isLoading, error }] = useEditPostMutation();
+  const [deletePost] = useDeletePostMutation();
   const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = useRef<HTMLButtonElement>(null);
 
   const initialFormValues = {
     title: post.title,
@@ -40,7 +56,6 @@ const EmployerPostOptions = ({ post }: { post: JobPost }) => {
   };
 
   const handleUpdateJob = async (value: JobFormFields) => {
-    console.log(value);
     if (!isLoading) {
       try {
         await updatePost({ ...value, id: post.id }).unwrap();
@@ -69,11 +84,70 @@ const EmployerPostOptions = ({ post }: { post: JobPost }) => {
     }
   };
 
+  const handleDeletePost = async () => {
+    try {
+      await deletePost(post.id).unwrap();
+      toast({
+        status: "success",
+        title: "New job.",
+        description: "Successfully deleted this job.",
+        isClosable: true,
+      });
+      onClose();
+    } catch (err) {
+      console.error("Failed to delete this job: ", err);
+      const errorMessage =
+        error && "data" in error
+          ? JSON.stringify(error.data)
+          : JSON.stringify(getErrorMessage(err));
+      toast({
+        status: "error",
+        title: "Error",
+        description: errorMessage,
+        isClosable: true,
+      });
+    }
+  };
+
   return (
     <Protected id={id!}>
       <section className="flex flex-col">
         <hr className="h-px bg-gray-400 border-0 dark:bg-gray-700 mt-auto"></hr>
         <div className="flex justify-end items-center">
+          <div className="mr-auto ml-3 items-center">
+            <button
+              className="text-black text-xs place-self-end"
+              onClick={onOpen}
+            >
+              <DeleteOutlined />
+            </button>
+            <AlertDialog
+              isOpen={isOpen}
+              leastDestructiveRef={cancelRef}
+              onClose={onClose}
+            >
+              <AlertDialogOverlay>
+                <AlertDialogContent>
+                  <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                    Delete This Job
+                  </AlertDialogHeader>
+
+                  <AlertDialogBody>
+                    Are you sure? You can't undo this action afterwards.
+                  </AlertDialogBody>
+
+                  <AlertDialogFooter>
+                    <Button ref={cancelRef} onClick={onClose}>
+                      Cancel
+                    </Button>
+                    <Button colorScheme="red" onClick={handleDeletePost} ml={3}>
+                      Delete
+                    </Button>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialogOverlay>
+            </AlertDialog>
+          </div>
           <button
             onClick={handleEditClick}
             className="btn-primary my-3 mx-3 bg-purple-400 hover:bg-purple-300"
@@ -114,7 +188,7 @@ const JobsList = ({ employerId, searchValue }: JobsListProps) => {
       </PostExcerpt>
     ));
   } else {
-    content = <div>Posts is not available</div>;
+    content = <Spinner />;
   }
 
   return (

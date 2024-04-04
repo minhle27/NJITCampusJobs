@@ -20,7 +20,7 @@ const App = () => {
   const isRegisterPage = window.location.pathname === "/register";
 
   return (
-    <>
+    <div className="flex flex-col h-screen">
       <Router>
         {auth.user && !isLoginPage && !isRegisterPage && <NavBar />}
         <Routes>
@@ -58,7 +58,7 @@ const App = () => {
           />
         </Routes>
       </Router>
-    </>
+    </div>
   );
 };
 

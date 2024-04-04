@@ -39,3 +39,10 @@ export interface NewJobPost {
   location: string;
   salary: number;
 }
+
+export interface NewApplicantStatus {
+  studentId: string;
+  resumeUrl: string;
+  oldStatus: string | null;
+  newStatus: string;
+}

@@ -10,10 +10,22 @@ postRouter.get(
   postController.getAllPostsFromAnEmployer
 );
 
+postRouter.delete(
+  "/:id",
+  verifyToken,
+  postController.deleteAPost
+);
+
 postRouter.patch(
   "/:id",
   verifyToken,
   postController.updateAPost
+);
+
+postRouter.patch(
+  "/:id/applicants",
+  verifyToken,
+  postController.updateApplicantStatus
 );
 
 postRouter.post(

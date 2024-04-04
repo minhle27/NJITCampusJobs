@@ -51,12 +51,26 @@ const postController = {
   },
 
   getAllPosts: async (_req: AuthenticatedRequest, res: Response) => {
-    const allJobPosts = await jobModel.find({});
+    const allJobPosts = await jobModel.find({}).populate({
+      path: "employer",
+      select: "fullName department profilePicture",
+    });
     if (!allJobPosts) {
       return res.status(400).json({ error: "Fetching posts failed" });
     }
     return res.status(200).json(allJobPosts);
   },
+
+  // getPost: async (req: AuthenticatedRequest, res: Response) => {
+  //   const post = await jobModel.findById(req.params.id).populate({
+  //     path: "employer",
+  //     select: "fullName department profilePicture",
+  //   });
+  //   if (!post) {
+  //     return res.status(400).json({ error: "Post not found" });
+  //   }
+  //   return res.status(200).json(post);
+  // },
 };
 
 export default postController;

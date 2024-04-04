@@ -16,7 +16,7 @@ postRouter.patch(
   postController.updateAPost
 );
 
-postRouter.put(
+postRouter.patch(
   "/:id/applicants",
   verifyToken,
   postController.updateApplicantStatus

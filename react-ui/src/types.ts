@@ -64,6 +64,7 @@ export interface JobPost {
 
 export interface Application {
   student: {
+    id: string;
     fullName: string;
     profilePicture: FileAsset;
   };

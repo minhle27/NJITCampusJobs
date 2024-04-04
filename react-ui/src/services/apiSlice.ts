@@ -37,6 +37,18 @@ export const apiSlice = createApi({
         body: registerInfo,
       }),
     }),
+    updateApplicantStatus: builder.mutation({
+      query: (application) => {
+        const postId = application.postId;
+        delete application.postId;
+        return ({
+          url: `/post/${postId}/applicants`,
+          method: "PATCH",
+          body: application,
+        })
+      },
+      invalidatesTags: (_result, _error, arg) => [{ type: "Post", id: arg.id }],
+    }),
     createNewJob: builder.mutation({
       query: (newJob) => ({
         url: "/post",
@@ -75,4 +87,5 @@ export const {
   useGetStudentQuery,
   useCreateNewJobMutation,
   useEditPostMutation,
+  useUpdateApplicantStatusMutation
 } = apiSlice;

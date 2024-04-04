@@ -1,8 +1,26 @@
+import { useRef } from "react";
 import { ApplicationWithStatus, JobPost } from "../../../types";
+import { ToggleHandle } from "../../Modules/FormFrameModal";
+import DetailsForm, { DetailsFormFields } from "./DetailsForm";
+import { useToast } from "@chakra-ui/react";
+import { useUpdateApplicantStatusMutation } from "../../../services/apiSlice";
+import { getErrorMessage } from "../../../utils";
 
-const Applicant = ({ application }: { application: ApplicationWithStatus }) => {
+interface Props {
+  application: ApplicationWithStatus;
+  post: JobPost;
+}
+
+const Applicant = ({ application, post }: Props) => {
+  const detailsFormRef = useRef<ToggleHandle>(null);
+  const toast = useToast();
+  const [updateStatus, { error, isLoading }] =
+    useUpdateApplicantStatusMutation();
+
   const handleClick = () => {
-    console.log("hello");
+    if (detailsFormRef.current) {
+      detailsFormRef.current.toggleVisibility();
+    }
   };
 
   const status = application.status;
@@ -18,6 +36,58 @@ const Applicant = ({ application }: { application: ApplicationWithStatus }) => {
     styleByStatus += "bg-neutral-300";
   }
 
+  const initialFormValues = {
+    status,
+  };
+
+  const handleUpdateStatus = async (value: DetailsFormFields) => {
+    console.log(value);
+    const oldStatus = status;
+    const newStatus = value.status;
+
+    if (oldStatus === newStatus) {
+      toast({
+        status: "warning",
+        title: "Error",
+        description: "Must choose a new status",
+        isClosable: true,
+      });
+    } else {
+      const newStatusObject = {
+        studentId: student.id,
+        resumeUrl: application.resumeUrl,
+        oldStatus,
+        newStatus,
+        postId: post.id,
+      };
+      try {
+        if (!isLoading) await updateStatus(newStatusObject).unwrap();
+        toast({
+          status: "success",
+          title: "New job.",
+          description: "Successfully updated this application.",
+          isClosable: true,
+        });
+
+        if (detailsFormRef.current) {
+          detailsFormRef.current.toggleVisibility();
+        }
+      } catch (err) {
+        console.error("Failed to updated this job: ", err);
+        const errorMessage =
+          error && "data" in error
+            ? JSON.stringify(error.data)
+            : JSON.stringify(getErrorMessage(err));
+        toast({
+          status: "error",
+          title: "Error",
+          description: errorMessage,
+          isClosable: true,
+        });
+      }
+    }
+  };
+
   return (
     <div className={styleByStatus}>
       <div className="flex items-center">
@@ -32,6 +102,12 @@ const Applicant = ({ application }: { application: ApplicationWithStatus }) => {
         <button onClick={handleClick} className="btn-2">
           View Details
         </button>
+        <DetailsForm
+          resumeUrl={application.resumeUrl}
+          detailsFormRef={detailsFormRef}
+          initialFormValues={initialFormValues}
+          handleSubmit={handleUpdateStatus}
+        />
       </div>
     </div>
   );
@@ -75,7 +151,13 @@ const ApplicantsList = ({
   return (
     <div className="flex flex-col overflow-auto">
       {applicationsToShow.map((application) => {
-        return <Applicant key={application.id} application={application} />;
+        return (
+          <Applicant
+            post={post}
+            key={application.id}
+            application={application}
+          />
+        );
       })}
     </div>
   );

@@ -76,16 +76,24 @@ export const apiSlice = createApi({
       },
       invalidatesTags: (_result, _error, arg) => [{ type: "Post", id: arg.id }],
     }),
+    deletePost: builder.mutation({
+      query: (id) => ({
+        url: `/post/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: (_result, _error, arg) => [{ type: "Post", id: arg.id }],
+    }),
   }),
 });
 
 export const {
-  useAddNewUserMutation,
-  useLoginUserMutation,
   useGetEmployerPostsQuery,
   useGetEmployerQuery,
   useGetStudentQuery,
   useCreateNewJobMutation,
   useEditPostMutation,
+  useAddNewUserMutation,
+  useLoginUserMutation,
+  useDeletePostMutation,
   useUpdateApplicantStatusMutation
 } = apiSlice;

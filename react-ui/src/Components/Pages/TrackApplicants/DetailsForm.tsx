@@ -1,7 +1,6 @@
 import { useFormik } from "formik";
 import FormFrameModal from "../../Modules/FormFrameModal";
 import { ToggleHandle } from "../../Modules/FormFrameModal";
-import * as Yup from "yup";
 
 interface Props {
   detailsFormRef: React.MutableRefObject<ToggleHandle | null>;
@@ -24,12 +23,6 @@ const DetailsForm = ({
 }: Props) => {
   const formik = useFormik<DetailsFormFields>({
     initialValues: initialFormValues,
-
-    validationSchema: Yup.object({
-      status: Yup.string().required(
-        "Please provide job title at least 5 characters"
-      ),
-    }),
     onSubmit: handleSubmit,
   });
 

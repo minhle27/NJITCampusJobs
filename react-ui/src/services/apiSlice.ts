@@ -21,7 +21,10 @@ export const apiSlice = createApi({
       query: (employerId) => `/post/employer/${employerId}`,
       providesTags: (result = []) => [
         "Post",
-        ...result.map(({ id }: { id: string }) => ({ type: "Post" as const, id })),
+        ...result.map(({ id }: { id: string }) => ({
+          type: "Post" as const,
+          id,
+        })),
       ],
     }),
     getEmployer: builder.query<Employer, string>({
@@ -53,13 +56,17 @@ export const apiSlice = createApi({
       query: (post) => {
         const id = post.id;
         delete post.id;
-        return ({
+        return {
           url: `/post/${id}`,
           method: "PATCH",
           body: post,
-        })
+        };
       },
       invalidatesTags: (_result, _error, arg) => [{ type: "Post", id: arg.id }],
+    }),
+
+    getAllPosts: builder.query<JobPost[], void>({
+      query: () => "/post",
     }),
   }),
 });
@@ -71,4 +78,5 @@ export const {
   useGetEmployerQuery,
   useCreateNewJobMutation,
   useEditPostMutation,
+  useGetAllPostsQuery,
 } = apiSlice;

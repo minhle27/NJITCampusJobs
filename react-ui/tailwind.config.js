@@ -8,12 +8,17 @@ export default {
     extend: {
       colors: {
         "search-bar": "#F4EEEE",
+        "cyan-feed": "#82E6CE",
       },
       fontSize: {
         14: "14px",
+        15: "15px",
         16: "16px",
         36: "36px",
         48: "48px",
+      },
+      width: {
+        "1/11": "11.11111%",
       },
     },
   },

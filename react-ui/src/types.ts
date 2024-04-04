@@ -46,7 +46,7 @@ export interface JobPost {
     rejected: [];
   };
   externalApplication: string;
-  employer: string;
+  employer: string | Employer;
   title: string;
   jobDescription: string;
   location: string;

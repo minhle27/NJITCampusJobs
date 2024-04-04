@@ -26,11 +26,7 @@ const TrackApplicants = () => {
   });
 
   if (postById?.employer !== employerId) {
-    return (
-      <div>
-        Not allowed to access this page
-      </div>
-    );
+    return <div>Not allowed to access this page</div>;
   }
 
   return (

@@ -8,7 +8,7 @@ interface PostExcerptProps {
 }
 
 const PostExcerpt = ({ post, children }: PostExcerptProps) => {
-  const { data: employer } = useGetEmployerQuery(post.employer);
+  const { data: employer } = useGetEmployerQuery(post.employer as string);
   // console.log(employer);
   return (
     <div className="flex flex-col shadow-lg mx-5 my-3 rounded-md w-1/2 h-fit bg-gray-100 shadow-slate-300">

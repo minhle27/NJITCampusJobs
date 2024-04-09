@@ -41,8 +41,5 @@ export interface NewJobPost {
 }
 
 export interface NewApplicantStatus {
-  studentId: string;
-  resumeUrl: string;
-  oldStatus: string | null;
   newStatus: string;
 }

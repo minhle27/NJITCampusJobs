@@ -20,6 +20,9 @@ export default {
       width: {
         "1/11": "11.11111%",
       },
+      height: {
+        "feed-list": "80svh",
+      },
     },
   },
   // eslint-disable-next-line no-undef

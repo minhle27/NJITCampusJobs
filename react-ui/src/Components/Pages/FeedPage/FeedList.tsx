@@ -22,10 +22,6 @@ const FeedList = ({ searchValue }: FeedProps) => {
     content = <div>Posts is not available</div>;
   }
 
-  return (
-    <div className="flex items-center justify-evenly flex-wrap w-4/5 ">
-      {content}
-    </div>
-  );
+  return <div className="flex flex-wrap scrollbar-thin">{content}</div>;
 };
 export default FeedList;

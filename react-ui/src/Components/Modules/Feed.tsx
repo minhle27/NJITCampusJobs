@@ -17,7 +17,7 @@ const Feed = ({ post }: Props) => {
 
   const { data: employer } = useGetEmployerQuery(employerId);
   return (
-    <div className="shadow-lg rounded-md w-[350px] h-[290px] p-6 bg-gray-100 shadow-slate-300 transition ease-in-out hover:scale-105 hover:bg-gray-300 font-montserat mb-3 relative">
+    <div className="shadow-lg rounded-md w-[350px] h-[290px] p-6 bg-gray-100 shadow-slate-300 transition ease-in-out hover:scale-105 hover:bg-gray-300 font-montserat relative m-3">
       <div className="flex-col flex w-full">
         <div className="flex justify-between">
           <div className="flex items-center">

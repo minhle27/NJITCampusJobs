@@ -63,15 +63,9 @@ export interface JobPost {
 }
 
 export interface Application {
-  student: {
-    id: string;
-    fullName: string;
-    profilePicture: FileAsset;
-  };
-  resumeUrl: string;
   id: string;
-}
-
-export interface ApplicationWithStatus extends Application {
+  student: Student;
+  resumeUrl: string;
   status: string;
+  job: JobPost;
 }

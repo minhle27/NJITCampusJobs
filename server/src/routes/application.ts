@@ -10,6 +10,12 @@ applicationRouter.get(
   applicationController.getStudentApplications
 );
 
+applicationRouter.get(
+  "/post/:id",
+  verifyToken,
+  applicationController.getApplicationsByPost
+);
+
 applicationRouter.patch(
   "/:id/",
   verifyToken,

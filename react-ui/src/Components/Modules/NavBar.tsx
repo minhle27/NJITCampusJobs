@@ -24,7 +24,7 @@ const NavBar = () => {
   //const { data: employer } = useGetEmployerQuery(auth.user!.id);
 
   return (
-    <nav className="mx-auto flex w-full items-center justify-between shadow-md border-black">
+    <nav className="flex w-full items-center justify-between shadow-md border-black">
       <div className="flex items-center">
         <img src={Logo} className="ml-2" alt="Logo" />
         {[
@@ -51,7 +51,7 @@ const NavBar = () => {
           </button>
         ))}
       </div>
-      <div className="flex justify-end mr-6 relative">
+      <div className="flex justify-end mr-6">
         <div className="flex">
           <img src={NotificationImage} className="mr-4" />
           {/* <div

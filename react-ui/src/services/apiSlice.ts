@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../app/store";
-import { Employer, Student } from "../types";
+import { Application, Employer, Student } from "../types";
 import { JobPost } from "../types";
 
 export const apiSlice = createApi({
@@ -15,13 +15,36 @@ export const apiSlice = createApi({
       return headers;
     },
   }),
-  tagTypes: ["Post"],
+  tagTypes: ["Post", "Application"],
   endpoints: (builder) => ({
     getEmployerPosts: builder.query<JobPost[], string>({
       query: (employerId) => `/post/employer/${employerId}`,
       providesTags: (result = []) => [
         "Post",
-        ...result.map(({ id }: { id: string }) => ({ type: "Post" as const, id })),
+        ...result.map(({ id }: { id: string }) => ({
+          type: "Post" as const,
+          id,
+        })),
+      ],
+    }),
+    getStudentApplications: builder.query<Application[], string>({
+      query: (studentId) => `/application/student/${studentId}`,
+      providesTags: (result = []) => [
+        "Application",
+        ...result.map(({ id }: { id: string }) => ({
+          type: "Application" as const,
+          id,
+        })),
+      ],
+    }),
+    getApplicationsByPost: builder.query<Application[], string>({
+      query: (postId) => `/application/post/${postId}`,
+      providesTags: (result = []) => [
+        "Application",
+        ...result.map(({ id }: { id: string }) => ({
+          type: "Application" as const,
+          id,
+        })),
       ],
     }),
     getEmployer: builder.query<Employer, string>({
@@ -37,17 +60,17 @@ export const apiSlice = createApi({
         body: registerInfo,
       }),
     }),
-    updateApplicantStatus: builder.mutation({
-      query: (application) => {
-        const postId = application.postId;
-        delete application.postId;
-        return ({
-          url: `/post/${postId}/applicants`,
+    updateApplicationStatus: builder.mutation({
+      query: ({ status, applicationId }) => {
+        return {
+          url: `/application/${applicationId}`,
           method: "PATCH",
-          body: application,
-        })
+          body: { status },
+        };
       },
-      invalidatesTags: (_result, _error, arg) => [{ type: "Post", id: arg.id }],
+      invalidatesTags: (_result, _error, arg) => [
+        { type: "Application", id: arg.id },
+      ],
     }),
     createNewJob: builder.mutation({
       query: (newJob) => ({
@@ -68,11 +91,11 @@ export const apiSlice = createApi({
       query: (post) => {
         const id = post.id;
         delete post.id;
-        return ({
+        return {
           url: `/post/${id}`,
           method: "PATCH",
           body: post,
-        })
+        };
       },
       invalidatesTags: (_result, _error, arg) => [{ type: "Post", id: arg.id }],
     }),
@@ -95,5 +118,7 @@ export const {
   useAddNewUserMutation,
   useLoginUserMutation,
   useDeletePostMutation,
-  useUpdateApplicantStatusMutation
+  useGetStudentApplicationsQuery,
+  useUpdateApplicationStatusMutation,
+  useGetApplicationsByPostQuery,
 } = apiSlice;

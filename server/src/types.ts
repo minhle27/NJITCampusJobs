@@ -39,7 +39,3 @@ export interface NewJobPost {
   location: string;
   salary: number;
 }
-
-export interface NewApplicantStatus {
-  newStatus: string;
-}

@@ -13,6 +13,7 @@ import RequireAuth from "./Components/Modules/RequireAuth.tsx";
 import EmployerDashboard from "./Components/Pages/EmployerDashboard/index.tsx";
 import TrackApplicants from "./Components/Pages/TrackApplicants/index.tsx";
 import NavBar from "./Components/Modules/NavBar.tsx";
+import EmployerProfile from "./Components/Pages/ProfilePage/index.tsx";
 
 const App = () => {
   const auth = useAuth();
@@ -46,6 +47,14 @@ const App = () => {
               <RequireAuth>
                 <EmployerDashboard />
               </RequireAuth>
+            }
+          />
+          <Route
+            path = "/profile/:id"
+            element={
+              //<RequireAuth>
+                <EmployerProfile />
+              //</RequireAuth>
             }
           />
           <Route

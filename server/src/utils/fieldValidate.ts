@@ -1,4 +1,4 @@
-import { User, LoginInfo, NewJobPost } from "../types";
+import { User, LoginInfo, NewJobPost, NewApplicantStatus } from "../types";
 import { isEmail } from "validator";
 
 const isString = (text: unknown): text is string => {
@@ -144,7 +144,11 @@ const fieldValidate = {
 
   processNewPost: (object: unknown): NewJobPost => {
     return object as NewJobPost;
-  }
+  },
+
+  processNewStatus: (object: unknown): NewApplicantStatus => {
+    return object as NewApplicantStatus;
+  },
 };
 
 export default fieldValidate;

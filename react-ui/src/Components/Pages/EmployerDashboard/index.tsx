@@ -61,7 +61,7 @@ const EmployerDashboard = () => {
   };
 
   return (
-    <div className="flex flex-col max-h-screen">
+    <div className="flex flex-col max-h-[93vh]">
       <SearchBar searchValue={searchValue} setSearchValue={setSearchValue} />
       <JobsList employerId={id!} searchValue={searchValue} />
       <Protected id={id!}>

@@ -22,7 +22,10 @@ export default {
         "1/11": "11.11111%",
       },
       height: {
-        "feed-list": "80svh",
+        "feed-list": "70dvh",
+      },
+      minHeight: {
+        "feed-list": "70dvh",
       },
     },
   },

@@ -17,7 +17,7 @@ const Feed = ({ post }: Props) => {
 
   const { data: employer } = useGetEmployerQuery(employerId);
   return (
-    <div className="shadow-lg rounded-md w-[350px] h-[290px] p-6 bg-gray-100 shadow-slate-300 transition ease-in-out hover:scale-105 hover:bg-gray-300 font-montserat relative m-3">
+    <div className="shadow-lg rounded-md h-[290px] min-w-[300px] max-w-[500px] p-6 bg-gray-100 shadow-slate-300 transition ease-in-out hover:scale-105 hover:bg-gray-300 font-montserat relative m-3">
       <div className="flex-col flex w-full">
         <div className="flex justify-between">
           <div className="flex items-center">
@@ -25,7 +25,7 @@ const Feed = ({ post }: Props) => {
               {post.externalApplication ? "apply externally" : "1-click apply"}
             </div>
           </div>
-          <img src={save} className="aspect-square w-1/11" />
+          <img src={save} className="aspect-square w-[40x]" />
         </div>
         <div className="font-bold text-[20px] py-5">{post?.title}</div>
         <section className="bottom-3 absolute">
@@ -34,7 +34,7 @@ const Feed = ({ post }: Props) => {
           <div className="flex text-16 font-semibold py-1 items-center">
             <img
               src={employer?.profilePicture.fileUrl}
-              className="mr-3 aspect-square max-w-11"
+              className="mr-3 aspect-square max-w-11 rounded-full"
             />
             {employer?.fullName}
           </div>

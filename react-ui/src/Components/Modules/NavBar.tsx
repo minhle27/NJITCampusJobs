@@ -51,7 +51,7 @@ const NavBar = () => {
           </button>
         ))}
       </div>
-      <div className="flex justify-end mr-6 relative">
+      <div className="flex justify-end mr-6">
         <div className="flex">
           <img src={NotificationImage} className="mr-4" />
           {/* <div

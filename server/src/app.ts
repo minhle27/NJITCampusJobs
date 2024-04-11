@@ -12,6 +12,7 @@ import errorHandler from "./middleware/errorHandler";
 import authRouter from "./routes/auth";
 import postRouter from "./routes/post";
 import employerRouter from "./routes/employer";
+import studentRouter from "./routes/student";
 
 const app = express();
 
@@ -53,6 +54,7 @@ app.get("/api/ping", (_req, res) => {
 app.use("/api/auth", authRouter);
 app.use("/api/post", postRouter);
 app.use("/api/employer", employerRouter);
+app.use("/api/student", studentRouter);
 
 // Middleware
 app.use(unknownEndpoint);

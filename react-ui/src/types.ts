@@ -6,9 +6,14 @@ export interface BaseUser {
   fullName: string;
   phone: string;
   profileDescription?: string;
-  profilePicture: {
-    fileUrl: string;
-  };
+  profilePicture: FileAsset;
+}
+
+interface FileAsset {
+  fileUrl: string;
+  cloudinaryId: string;
+  isDefault: boolean;
+  id: string;
 }
 
 export interface Student extends BaseUser {
@@ -41,9 +46,9 @@ export interface ErrorType {
 
 export interface JobPost {
   applicants: {
-    accepted: [];
-    pending: [];
-    rejected: [];
+    accepted: Application[];
+    pending: Application[];
+    rejected: Application[];
   };
   externalApplication: string;
   employer: string;
@@ -55,4 +60,18 @@ export interface JobPost {
   createdAt: string;
   updatedAt: string;
   id: string;
+}
+
+export interface Application {
+  student: {
+    id: string;
+    fullName: string;
+    profilePicture: FileAsset;
+  };
+  resumeUrl: string;
+  id: string;
+}
+
+export interface ApplicationWithStatus extends Application {
+  status: string;
 }

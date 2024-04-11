@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../app/store";
-import { Employer } from "../types";
+import { Employer, Student } from "../types";
 import { JobPost } from "../types";
 
 export const apiSlice = createApi({
@@ -27,12 +27,27 @@ export const apiSlice = createApi({
     getEmployer: builder.query<Employer, string>({
       query: (employerId) => `/employer/${employerId}`,
     }),
+    getStudent: builder.query<Student, string>({
+      query: (studentId) => `/student/${studentId}`,
+    }),
     addNewUser: builder.mutation({
       query: (registerInfo) => ({
         url: "/auth/register",
         method: "POST",
         body: registerInfo,
       }),
+    }),
+    updateApplicantStatus: builder.mutation({
+      query: (application) => {
+        const postId = application.postId;
+        delete application.postId;
+        return ({
+          url: `/post/${postId}/applicants`,
+          method: "PATCH",
+          body: application,
+        })
+      },
+      invalidatesTags: (_result, _error, arg) => [{ type: "Post", id: arg.id }],
     }),
     createNewJob: builder.mutation({
       query: (newJob) => ({
@@ -61,14 +76,24 @@ export const apiSlice = createApi({
       },
       invalidatesTags: (_result, _error, arg) => [{ type: "Post", id: arg.id }],
     }),
+    deletePost: builder.mutation({
+      query: (id) => ({
+        url: `/post/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: (_result, _error, arg) => [{ type: "Post", id: arg.id }],
+    }),
   }),
 });
 
 export const {
-  useAddNewUserMutation,
-  useLoginUserMutation,
   useGetEmployerPostsQuery,
   useGetEmployerQuery,
+  useGetStudentQuery,
   useCreateNewJobMutation,
   useEditPostMutation,
+  useAddNewUserMutation,
+  useLoginUserMutation,
+  useDeletePostMutation,
+  useUpdateApplicantStatusMutation
 } = apiSlice;

@@ -9,6 +9,7 @@ export default {
       colors: {
         "search-bar": "#F4EEEE",
         "cyan-feed": "#82E6CE",
+        "sort-bar": "#F7F5F5",
       },
       fontSize: {
         14: "14px",

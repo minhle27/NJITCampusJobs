@@ -4,6 +4,7 @@ import { Response } from "express";
 import { AuthenticatedRequest } from "../middleware/verifyToken";
 import fieldValidate from "../utils/fieldValidate";
 import studentModel from "../models/Student";
+import applicationModel from "../models/Application";
 
 const postController = {
   getAllPostsFromAnEmployer: async (
@@ -12,21 +13,11 @@ const postController = {
   ) => {
     const employer = await employerModel.findById(req.params.id).populate({
       path: "jobPosts",
-      populate: {
-        path: "applicants",
-        populate: {
-          path: "accepted rejected pending",
-          populate: {
-            path: "student",
-            select: "fullName profilePicture",
-          },
-        },
-      },
     });
     if (!employer) {
       return res.status(404).json({ error: "User Not Found" });
     }
-    return res.status(200).json(employer?.jobPosts);
+    return res.status(200).json(employer.jobPosts);
   },
 
   updateAPost: async (req: AuthenticatedRequest, res: Response) => {
@@ -46,73 +37,26 @@ const postController = {
     }
     await jobModel.findByIdAndDelete(req.params.id);
 
-    // delete this post reference in employer and student's applied job
+    // delete this post reference in other collections
     await employerModel.updateOne(
       { _id: post.employer },
       { $pull: { jobPosts: post._id } }
     );
 
+    await applicationModel.deleteMany({ job: post._id });
+
     await studentModel.updateMany(
       {
-        $or: [
-          { 'appliedJobs.accepted': post._id },
-          { 'appliedJobs.pending': post._id },
-          { 'appliedJobs.rejected': post._id }
-        ]
+        $or: [{ savedJobs: post._id }],
       },
       {
         $pull: {
-          'appliedJobs.accepted': post._id,
-          'appliedJobs.pending': post._id,
-          'appliedJobs.rejected': post._id
-        }
-      },
+          savedJobs: post._id,
+        },
+      }
     );
 
     return res.status(204).end();
-  },
-
-  updateApplicantStatus: async (req: AuthenticatedRequest, res: Response) => {
-    const application = fieldValidate.processNewStatus(req.body);
-    const post = await jobModel.findById(req.params.id);
-    const student = await studentModel.findById(application.studentId);
-
-    if (!post || !student) {
-      return res.status(404).json({ error: "Post or Student Not Found" });
-    }
-
-    const newApplication = {
-      student: student._id,
-      resumeUrl: application.resumeUrl,
-    };
-
-    if (!application.oldStatus) {
-      await post.updateOne({ $push: { "applicants.pending": newApplication } });
-      await student.updateOne({
-        $push: { "appliedJobs.pending": post._id },
-      });
-    } else {
-      await post.updateOne({
-        $pull: {
-          [`applicants.${application.oldStatus}`]: {
-            student: application.studentId,
-          },
-        },
-      });
-      await post.updateOne({
-        $push: {
-          [`applicants.${application.newStatus}`]: newApplication,
-        },
-      });
-      await student.updateOne({
-        $push: { [`appliedJobs.${application.newStatus}`]: post._id },
-      });
-      await student.updateOne({
-        $pull: { [`appliedJobs.${application.oldStatus}`]: post._id },
-      });
-    }
-
-    return res.status(200).json("Application has been updated");
   },
 
   createNewPost: async (req: AuthenticatedRequest, res: Response) => {

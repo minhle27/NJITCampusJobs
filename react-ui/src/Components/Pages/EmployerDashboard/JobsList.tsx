@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
   useEditPostMutation,
   useGetEmployerPostsQuery,
-  useDeletePostMutation
+  useDeletePostMutation,
 } from "../../../services/apiSlice";
 import Protected from "../../Modules/Protected";
 import PostExcerpt from "./PostExcerpt";
@@ -25,6 +25,7 @@ import {
 import { getErrorMessage } from "../../../utils";
 import { JobFormFields } from "./JobForm";
 import { DeleteOutlined } from "@ant-design/icons";
+import { useJobSearch } from "../../../hooks/useJobSearch";
 
 interface JobsListProps {
   employerId: string;
@@ -35,8 +36,10 @@ const EmployerPostOptions = ({ post }: { post: JobPost }) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const jobFormRef = useRef<ToggleHandle>(null);
-  const [updatePost, { isLoading, error }] = useEditPostMutation();
-  const [deletePost] = useDeletePostMutation();
+  const [updatePost, { isLoading: isLoadingUpdate, error: updateError }] =
+    useEditPostMutation();
+  const [deletePost, { isLoading: isLoadingDelete, error: deleteError }] =
+    useDeletePostMutation();
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<HTMLButtonElement>(null);
@@ -56,7 +59,7 @@ const EmployerPostOptions = ({ post }: { post: JobPost }) => {
   };
 
   const handleUpdateJob = async (value: JobFormFields) => {
-    if (!isLoading) {
+    if (!isLoadingUpdate) {
       try {
         await updatePost({ ...value, id: post.id }).unwrap();
         toast({
@@ -71,8 +74,8 @@ const EmployerPostOptions = ({ post }: { post: JobPost }) => {
       } catch (err) {
         console.error("Failed to updated this job: ", err);
         const errorMessage =
-          error && "data" in error
-            ? JSON.stringify(error.data)
+          updateError && "data" in updateError
+            ? JSON.stringify(updateError.data)
             : JSON.stringify(getErrorMessage(err));
         toast({
           status: "error",
@@ -85,27 +88,29 @@ const EmployerPostOptions = ({ post }: { post: JobPost }) => {
   };
 
   const handleDeletePost = async () => {
-    try {
-      await deletePost(post.id).unwrap();
-      toast({
-        status: "success",
-        title: "New job.",
-        description: "Successfully deleted this job.",
-        isClosable: true,
-      });
-      onClose();
-    } catch (err) {
-      console.error("Failed to delete this job: ", err);
-      const errorMessage =
-        error && "data" in error
-          ? JSON.stringify(error.data)
-          : JSON.stringify(getErrorMessage(err));
-      toast({
-        status: "error",
-        title: "Error",
-        description: errorMessage,
-        isClosable: true,
-      });
+    if (!isLoadingDelete) {
+      try {
+        await deletePost(post.id).unwrap();
+        toast({
+          status: "success",
+          title: "New job.",
+          description: "Successfully deleted this job.",
+          isClosable: true,
+        });
+        onClose();
+      } catch (err) {
+        console.error("Failed to delete this job: ", err);
+        const errorMessage =
+          deleteError && "data" in deleteError
+            ? JSON.stringify(deleteError.data)
+            : JSON.stringify(getErrorMessage(err));
+        toast({
+          status: "error",
+          title: "Error",
+          description: errorMessage,
+          isClosable: true,
+        });
+      }
     }
   };
 
@@ -155,7 +160,7 @@ const EmployerPostOptions = ({ post }: { post: JobPost }) => {
             Edit Post
           </button>
           <button
-            onClick={() => navigate(`/trackjob/${post.id}`)}
+            onClick={() => navigate(`/applicants/${post.id}`)}
             className="btn-primary my-3 mx-3 bg-lime-400 hover:bg-lime-300"
           >
             Track Applicants
@@ -175,10 +180,7 @@ const EmployerPostOptions = ({ post }: { post: JobPost }) => {
 const JobsList = ({ employerId, searchValue }: JobsListProps) => {
   const { data: posts, isSuccess } = useGetEmployerPostsQuery(employerId);
 
-  const bySearchField = (p: JobPost) =>
-    p.title.toLowerCase().includes(searchValue.toLowerCase());
-  const postsToShow =
-    searchValue && posts ? posts.filter(bySearchField) : posts;
+  const postsToShow = useJobSearch(searchValue, posts);
 
   let content;
   if (isSuccess && postsToShow) {

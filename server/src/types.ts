@@ -39,3 +39,9 @@ export interface NewJobPost {
   location: string;
   salary: number;
 }
+
+export interface NewMessage {
+  conversationId: string;
+  sender: string;
+  content: string;
+}

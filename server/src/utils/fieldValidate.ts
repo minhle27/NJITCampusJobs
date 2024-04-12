@@ -1,5 +1,6 @@
 import { User, LoginInfo, NewJobPost } from "../types";
 import { isEmail } from "validator";
+import { NewMessage } from "../types";
 
 const isString = (text: unknown): text is string => {
   return typeof text === "string" || text instanceof String;
@@ -148,6 +149,10 @@ const fieldValidate = {
 
   processNewStatus: (object: unknown): { status: string } => {
     return object as { status: string };
+  },
+
+  processNewMessage: (object: unknown): NewMessage => {
+    return object as NewMessage;
   },
 };
 

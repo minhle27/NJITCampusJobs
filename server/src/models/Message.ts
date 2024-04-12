@@ -7,15 +7,7 @@ const messageSchema = new mongoose.Schema(
       ref: "Conversation",
     },
     sender: {
-      accountType: {
-        type: String,
-        enum: {
-          values: ["student", "employer"],
-          message: "Invalid account type",
-        },
-        required: true,
-      },
-      userId: String,
+      type: String,
     },
     content: {
       type: String,

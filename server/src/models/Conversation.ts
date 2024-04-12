@@ -2,19 +2,9 @@ import mongoose, { InferSchemaType } from "mongoose";
 
 const conversationSchema = new mongoose.Schema(
   {
-    members: [
-      {
-        accountType: {
-          type: String,
-          enum: {
-            values: ["student", "employer"],
-            message: "Invalid account type",
-          },
-          required: true,
-        },
-        userId: String,
-      },
-    ],
+    members: {
+      type: Array,
+    },
     messageCount: {
       type: Number,
       default: 0,

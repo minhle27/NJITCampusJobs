@@ -18,7 +18,7 @@ const applicationSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-type employerSchemaInferType = InferSchemaType<typeof applicationSchema>;
+type applicationSchemaInferType = InferSchemaType<typeof applicationSchema>;
 
 applicationSchema.set("toJSON", {
   transform: (_document, returnedObject) => {
@@ -31,7 +31,7 @@ applicationSchema.set("toJSON", {
   },
 });
 
-const applicationModel = mongoose.model<employerSchemaInferType>(
+const applicationModel = mongoose.model<applicationSchemaInferType>(
   "Application",
   applicationSchema
 );

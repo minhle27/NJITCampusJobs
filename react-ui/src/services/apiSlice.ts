@@ -106,6 +106,13 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: (_result, _error, arg) => [{ type: "Post", id: arg.id }],
     }),
+    withdrawApplication: builder.mutation({
+      query: (id) => ({
+        url: `/application/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: (_result, _error, arg) => [{ type: "Application", id: arg.id }],
+    }),
   }),
 });
 
@@ -121,4 +128,5 @@ export const {
   useGetStudentApplicationsQuery,
   useUpdateApplicationStatusMutation,
   useGetApplicationsByPostQuery,
+  useWithdrawApplicationMutation
 } = apiSlice;

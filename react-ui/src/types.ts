@@ -68,4 +68,5 @@ export interface Application {
   resumeUrl: string;
   status: string;
   job: JobPost;
+  createdAt: Date;
 }

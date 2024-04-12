@@ -44,6 +44,9 @@ const NavBar = () => {
               if (route === "/Dashboard") {
                 return handleClick(`/dashboard/${auth.user!.id}`);
               }
+              if (route === "/Application") {
+                return handleClick(`/applications/${auth.user!.id}`);
+              }
               return handleClick(route.substring(1).toLowerCase());
             }}
           >

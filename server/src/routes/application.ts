@@ -16,6 +16,12 @@ applicationRouter.get(
   applicationController.getApplicationsByPost
 );
 
+applicationRouter.delete(
+  "/:id",
+  verifyToken,
+  applicationController.withdrawApplication
+);
+
 applicationRouter.patch(
   "/:id/",
   verifyToken,

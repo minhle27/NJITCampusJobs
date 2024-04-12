@@ -35,6 +35,12 @@ const applicationController = {
 
     return res.status(200).json("Application has been updated");
   },
+
+  withdrawApplication: async (req: AuthenticatedRequest, res: Response) => {
+    await applicationModel.findByIdAndDelete(req.params.id);
+    return res.status(204).end();
+  },
+    
 };
 
 export default applicationController;

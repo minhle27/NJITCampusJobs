@@ -14,6 +14,7 @@ import EmployerDashboard from "./Components/Pages/EmployerDashboard/index.tsx";
 import TrackApplicants from "./Components/Pages/TrackApplicants/index.tsx";
 import NavBar from "./Components/Modules/NavBar.tsx";
 import TrackApplications from "./Components/Pages/TrackApplications/index.tsx";
+import Inbox from "./Components/Pages/Inbox/index.tsx";
 
 const App = () => {
   const auth = useAuth();
@@ -54,6 +55,14 @@ const App = () => {
             element={
               <RequireAuth>
                 <TrackApplications />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/inbox"
+            element={
+              <RequireAuth>
+                <Inbox />
               </RequireAuth>
             }
           />

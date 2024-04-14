@@ -25,7 +25,7 @@ const SingleMessage = ({ own, message, partner }: Props) => {
         <p
           className={
             "text-base p-[10px] rounded-md max-w-[500px] text-black " +
-            (own ? "bg-blue-100" : "bg-gray-100")
+            (own ? "bg-blue-100" : "bg-orange-100")
           }
         >
           {message.content}

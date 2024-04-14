@@ -78,6 +78,7 @@ export interface Conversation {
 }
 
 export interface Message {
+  id: string;
   content: string;
   sender: string;
   createdAt: Date;

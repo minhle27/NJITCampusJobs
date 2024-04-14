@@ -1,6 +1,13 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../app/store";
-import { Application, BaseUser, Conversation, Employer, Message, Student } from "../types";
+import {
+  Application,
+  BaseUser,
+  Conversation,
+  Employer,
+  Message,
+  Student,
+} from "../types";
 import { JobPost } from "../types";
 
 export const apiSlice = createApi({
@@ -15,7 +22,7 @@ export const apiSlice = createApi({
       return headers;
     },
   }),
-  tagTypes: ["Post", "Application"],
+  tagTypes: ["Post", "Application", "Message"],
   endpoints: (builder) => ({
     getEmployerPosts: builder.query<JobPost[], string>({
       query: (employerId) => `/post/employer/${employerId}`,
@@ -114,7 +121,9 @@ export const apiSlice = createApi({
         url: `/application/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: (_result, _error, arg) => [{ type: "Application", id: arg.id }],
+      invalidatesTags: (_result, _error, arg) => [
+        { type: "Application", id: arg.id },
+      ],
     }),
     sendNewMessage: builder.mutation({
       query: (newMessage) => ({
@@ -122,12 +131,22 @@ export const apiSlice = createApi({
         method: "POST",
         body: newMessage,
       }),
+      invalidatesTags: (_result, _error, arg) => [
+        { type: "Message", id: arg.id },
+      ],
     }),
     getConversationByUser: builder.query<Conversation[], string>({
       query: (userId) => `/conversation/${userId}`,
     }),
     getMessageByConversation: builder.query<Message[], string>({
       query: (conversationId) => `/message/conversation/${conversationId}`,
+      providesTags: (result = []) => [
+        "Message",
+        ...result.map(({ id }: { id: string }) => ({
+          type: "Message" as const,
+          id,
+        })),
+      ],
     }),
   }),
 });
@@ -148,5 +167,5 @@ export const {
   useGetConversationByUserQuery,
   useGetUserByIdQuery,
   useGetMessageByConversationQuery,
-  useWithdrawApplicationMutation
+  useWithdrawApplicationMutation,
 } = apiSlice;

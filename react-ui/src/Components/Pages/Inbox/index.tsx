@@ -16,7 +16,7 @@ const Inbox = () => {
           {conversation ? (
             <ChatBox conversation={conversation} />
           ) : (
-            <div>Choose a conversation</div>
+            <div className="text-center text-lg font-bold m-5 text-gray-700">Choose a conversation</div>
           )}
         </div>
       </div>

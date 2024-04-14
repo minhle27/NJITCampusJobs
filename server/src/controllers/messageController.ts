@@ -10,7 +10,7 @@ const messageController = {
     res: Response
   ) => {
     const messages = await messageModel.find({
-      conversationId: req.params.conversationId,
+      conversation: req.params.conversationId,
     });
     res.status(200).json(messages);
   },
@@ -21,7 +21,7 @@ const messageController = {
     const savedMessage = await newMessage.save();
     await conversationModel.findOneAndUpdate(
       {
-        _id: body.conversationId,
+        _id: body.conversation,
       },
       {
         $inc: { messageCount: 1 },

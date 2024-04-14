@@ -44,7 +44,7 @@ const ChatBox = ({ conversation }: Props) => {
         })}
       </div>
       <div>
-        <NewMessage />
+        <NewMessage conversation={conversation} />
       </div>
     </div>
   );

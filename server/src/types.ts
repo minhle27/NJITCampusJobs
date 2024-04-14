@@ -41,7 +41,7 @@ export interface NewJobPost {
 }
 
 export interface NewMessage {
-  conversationId: string;
+  conversation: string;
   sender: string;
   content: string;
 }

@@ -14,6 +14,7 @@ import EmployerDashboard from "./Components/Pages/EmployerDashboard/index.tsx";
 import TrackApplicants from "./Components/Pages/TrackApplicants/index.tsx";
 import NavBar from "./Components/Modules/NavBar.tsx";
 import FeedPage from "./Components/Pages/FeedPage/FeedPage.tsx";
+import JobDetail from "./Components/Pages/JobDetail/JobDetail.tsx";
 
 const App = () => {
   const auth = useAuth();
@@ -59,10 +60,19 @@ const App = () => {
           />
 
           <Route
-            path="/feed"
+            path="/post"
             element={
               <RequireAuth>
                 <FeedPage />
+              </RequireAuth>
+            }
+          />
+
+          <Route
+            path="/post/:id"
+            element={
+              <RequireAuth>
+                <JobDetail />
               </RequireAuth>
             }
           />

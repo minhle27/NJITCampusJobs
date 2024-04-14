@@ -55,18 +55,18 @@ const postController = {
     await studentModel.updateMany(
       {
         $or: [
-          { 'appliedJobs.accepted': post._id },
-          { 'appliedJobs.pending': post._id },
-          { 'appliedJobs.rejected': post._id }
-        ]
+          { "appliedJobs.accepted": post._id },
+          { "appliedJobs.pending": post._id },
+          { "appliedJobs.rejected": post._id },
+        ],
       },
       {
         $pull: {
-          'appliedJobs.accepted': post._id,
-          'appliedJobs.pending': post._id,
-          'appliedJobs.rejected': post._id
-        }
-      },
+          "appliedJobs.accepted": post._id,
+          "appliedJobs.pending": post._id,
+          "appliedJobs.rejected": post._id,
+        },
+      }
     );
 
     return res.status(204).end();
@@ -148,16 +148,16 @@ const postController = {
     return res.status(200).json(allJobPosts);
   },
 
-  // getPost: async (req: AuthenticatedRequest, res: Response) => {
-  //   const post = await jobModel.findById(req.params.id).populate({
-  //     path: "employer",
-  //     select: "fullName department profilePicture",
-  //   });
-  //   if (!post) {
-  //     return res.status(400).json({ error: "Post not found" });
-  //   }
-  //   return res.status(200).json(post);
-  // },
+  getPost: async (req: AuthenticatedRequest, res: Response) => {
+    const post = await jobModel.findById(req.params.id).populate({
+      path: "employer",
+      select: "fullName department profilePicture",
+    });
+    if (!post) {
+      return res.status(400).json({ error: "Post not found" });
+    }
+    return res.status(200).json(post);
+  },
 };
 
 export default postController;

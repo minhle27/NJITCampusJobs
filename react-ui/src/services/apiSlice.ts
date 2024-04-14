@@ -79,6 +79,11 @@ export const apiSlice = createApi({
       },
       invalidatesTags: (_result, _error, arg) => [{ type: "Post", id: arg.id }],
     }),
+
+    getPost: builder.query({
+      query: (postId) => `/post/${postId}`,
+    }),
+
     deletePost: builder.mutation({
       query: (id) => ({
         url: `/post/${id}`,

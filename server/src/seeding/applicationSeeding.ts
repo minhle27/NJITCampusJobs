@@ -20,7 +20,7 @@ async function getAllIdList<T>(model: Model<T>) {
   }
 }
 
-async function getRandomIdList<T>(quantity: number, model: Model<T>) {
+export async function getRandomIdList<T>(quantity: number, model: Model<T>) {
   try {
     const randomList: { _id: string }[] = await model.aggregate([
       { $sample: { size: quantity } },

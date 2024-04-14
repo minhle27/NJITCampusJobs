@@ -45,3 +45,9 @@ export interface NewMessage {
   sender: string;
   content: string;
 }
+
+export interface Conversation {
+  id: string;
+  members: Array<string>;
+  messageCount: number;
+}

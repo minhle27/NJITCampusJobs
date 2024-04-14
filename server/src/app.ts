@@ -16,6 +16,7 @@ import studentRouter from "./routes/student";
 import applicationRouter from "./routes/application";
 import conversationRouter from "./routes/conversation";
 import messageRouter from "./routes/message";
+import userRouter from "./routes/user";
 
 const app = express();
 
@@ -61,6 +62,7 @@ app.use("/api/student", studentRouter);
 app.use("/api/application", applicationRouter);
 app.use("/api/conversation", conversationRouter);
 app.use("/api/message", messageRouter);
+app.use("/api/user", userRouter);
 
 // Middleware
 app.use(unknownEndpoint);

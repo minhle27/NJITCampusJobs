@@ -1,19 +1,19 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import express from "express";
 const messageRouter = express.Router();
-import conversationController from "../controllers/conversationController";
+import messageController from "../controllers/messageController";
 import verifyToken from "../middleware/verifyToken";
 
 messageRouter.post(
   "/",
   verifyToken,
-  conversationController.getConversationByUser
+  messageController.createNewMessage
 );
 
 messageRouter.get(
-  "/:conversationId",
+  "/conversation/:conversationId",
   verifyToken,
-  conversationController.createConversation
+  messageController.getMessageByConversation
 );
 
 export default messageRouter;

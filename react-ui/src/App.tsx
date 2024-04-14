@@ -67,6 +67,14 @@ const App = () => {
             }
           />
           <Route
+            path="/inbox/:id"
+            element={
+              <RequireAuth>
+                <Inbox />
+              </RequireAuth>
+            }
+          />
+          <Route
             path="/login"
             element={auth.user ? <Navigate to="/" /> : <Login />}
           />

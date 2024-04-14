@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../app/store";
-import { Application, Employer, Student } from "../types";
+import { Application, BaseUser, Conversation, Employer, Message, Student } from "../types";
 import { JobPost } from "../types";
 
 export const apiSlice = createApi({
@@ -52,6 +52,9 @@ export const apiSlice = createApi({
     }),
     getStudent: builder.query<Student, string>({
       query: (studentId) => `/student/${studentId}`,
+    }),
+    getUserById: builder.query<BaseUser, string>({
+      query: (userId) => `/user/${userId}`,
     }),
     addNewUser: builder.mutation({
       query: (registerInfo) => ({
@@ -113,6 +116,19 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: (_result, _error, arg) => [{ type: "Application", id: arg.id }],
     }),
+    sendNewMessage: builder.mutation({
+      query: (newMessage) => ({
+        url: "/message",
+        method: "POST",
+        body: newMessage,
+      }),
+    }),
+    getConversationByUser: builder.query<Conversation[], string>({
+      query: (userId) => `/conversation/${userId}`,
+    }),
+    getMessageByConversation: builder.query<Message[], string>({
+      query: (conversationId) => `/message/conversation/${conversationId}`,
+    }),
   }),
 });
 
@@ -128,5 +144,9 @@ export const {
   useGetStudentApplicationsQuery,
   useUpdateApplicationStatusMutation,
   useGetApplicationsByPostQuery,
+  useSendNewMessageMutation,
+  useGetConversationByUserQuery,
+  useGetUserByIdQuery,
+  useGetMessageByConversationQuery,
   useWithdrawApplicationMutation
 } = apiSlice;

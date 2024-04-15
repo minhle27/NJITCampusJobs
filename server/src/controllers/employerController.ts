@@ -1,12 +1,9 @@
 import employerModel from "../models/Employer";
-import { AuthenticatedRequest } from "../middleware/verifyToken";
 import { Response } from "express";
+import { RequestWithUser } from "../types";
 
 const employerController = {
-  getEmployer: async (
-    req: AuthenticatedRequest,
-    res: Response
-  ) => {
+  getEmployer: async (req: RequestWithUser, res: Response) => {
     const employer = await employerModel.findById(req.params.id);
     return res.status(200).json(employer);
   },

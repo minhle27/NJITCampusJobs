@@ -1,3 +1,9 @@
+import { Request } from "express";
+
+export interface RequestWithUser extends Request {
+  user?: UserWithId | undefined;
+}
+
 export interface BaseUser {
   password: string;
   email: string;
@@ -5,6 +11,10 @@ export interface BaseUser {
   phone: string;
   profileDescription?: string;
   profilePicture?: string;
+}
+
+export interface UserWithId extends BaseUser {
+  _id: string;
 }
 
 export interface Student extends BaseUser {
@@ -40,9 +50,14 @@ export interface NewJobPost {
   salary: number;
 }
 
-export interface NewApplicantStatus {
-  studentId: string;
-  resumeUrl: string;
-  oldStatus: string | null;
-  newStatus: string;
+export interface NewMessage {
+  conversation: string;
+  sender: string;
+  content: string;
+}
+
+export interface Conversation {
+  id: string;
+  members: Array<string>;
+  messageCount: number;
 }

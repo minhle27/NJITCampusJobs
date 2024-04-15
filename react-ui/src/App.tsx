@@ -13,18 +13,20 @@ import RequireAuth from "./Components/Modules/RequireAuth.tsx";
 import EmployerDashboard from "./Components/Pages/EmployerDashboard/index.tsx";
 import TrackApplicants from "./Components/Pages/TrackApplicants/index.tsx";
 import NavBar from "./Components/Modules/NavBar.tsx";
+import TrackApplications from "./Components/Pages/TrackApplications/index.tsx";
+import Inbox from "./Components/Pages/Inbox/index.tsx";
 import FeedPage from "./Components/Pages/FeedPage/FeedPage.tsx";
 import JobDetail from "./Components/Pages/JobDetail/JobDetail.tsx";
 
 const App = () => {
   const auth = useAuth();
-  const isLoginPage = window.location.pathname === "/login";
-  const isRegisterPage = window.location.pathname === "/register";
 
   return (
     <div className="flex flex-col h-screen">
       <Router>
-        {auth.user && !isLoginPage && !isRegisterPage && <NavBar />}
+        <RequireAuth>
+          <NavBar />
+        </RequireAuth>
         <Routes>
           <Route
             path="/"
@@ -35,7 +37,7 @@ const App = () => {
             }
           />
           <Route
-            path="/trackjob/:id"
+            path="/applicants/:id"
             element={
               <RequireAuth>
                 <TrackApplicants />
@@ -47,6 +49,30 @@ const App = () => {
             element={
               <RequireAuth>
                 <EmployerDashboard />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/applications/:id"
+            element={
+              <RequireAuth>
+                <TrackApplications />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/inbox"
+            element={
+              <RequireAuth>
+                <Inbox />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/inbox/:id"
+            element={
+              <RequireAuth>
+                <Inbox />
               </RequireAuth>
             }
           />

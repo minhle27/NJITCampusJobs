@@ -64,7 +64,7 @@ const studentSchema = new mongoose.Schema(
     },
     resume: {
       type: [fileSchema],
-      default: createDefaultFileSchema
+      default: createDefaultFileSchema,
     },
     transcript: {
       type: fileSchema,
@@ -115,26 +115,6 @@ const studentSchema = new mongoose.Schema(
       },
       required: true,
     },
-    appliedJobs: {
-      accepted: [
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Job",
-        },
-      ],
-      pending: [
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Job",
-        },
-      ],
-      rejected: [
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Job",
-        },
-      ],
-    },
     savedJobs: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -178,7 +158,6 @@ fileSchema.set("toJSON", {
     }
   },
 });
-
 
 const studentModel = mongoose.model<studentSchemaInferType>(
   "Student",

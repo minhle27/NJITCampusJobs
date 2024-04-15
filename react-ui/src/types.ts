@@ -58,15 +58,23 @@ export interface JobPost {
 }
 
 export interface Application {
-  student: {
-    id: string;
-    fullName: string;
-    profilePicture: FileAsset;
-  };
-  resumeUrl: string;
   id: string;
+  student: Student;
+  resumeUrl: string;
+  status: string;
+  job: JobPost;
+  createdAt: Date;
 }
 
-export interface ApplicationWithStatus extends Application {
-  status: string;
+export interface Conversation {
+  id: string;
+  members: Array<string>;
+  messageCount: number;
+}
+
+export interface Message {
+  id: string;
+  content: string;
+  sender: string;
+  createdAt: Date;
 }

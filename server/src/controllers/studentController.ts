@@ -1,10 +1,10 @@
 import studentModel from "../models/Student";
-import { AuthenticatedRequest } from "../middleware/verifyToken";
 import { Response } from "express";
+import { RequestWithUser } from "../types";
 
 const studentController = {
   getStudent: async (
-    req: AuthenticatedRequest,
+    req: RequestWithUser,
     res: Response
   ) => {
     const student = await studentModel.findById(req.params.id);

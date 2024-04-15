@@ -16,12 +16,6 @@ postRouter.patch("/:id", verifyToken, postController.updateAPost);
 
 postRouter.get("/:id", verifyToken, postController.getPost);
 
-postRouter.patch(
-  "/:id/applicants",
-  verifyToken,
-  postController.updateApplicantStatus
-);
-
 postRouter.post("/", verifyToken, postController.createNewPost);
 
 postRouter.get("/", verifyToken, postController.getAllPosts);

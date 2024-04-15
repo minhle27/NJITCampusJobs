@@ -9,6 +9,8 @@ import { setCredentials } from "../../../state/authSlice";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
 import { getErrorMessage } from "../../../utils";
+import { post, socket } from "../../../client-socket";
+
 // import { getErrorMessage } from "../../../utils";
 interface InputForm {
   email: string;
@@ -45,17 +47,19 @@ const Login = () => {
       ),
     }),
     onSubmit: async (value) => {
-      console.log(value);
       if (!isLoading) {
         try {
           const user = await loginUser(value).unwrap();
-          console.log(user);
           dispatch(setCredentials(user));
+          await post("http://localhost:3001/api/initsocket", {
+            socketid: socket.id,
+          });
           navigate("/");
         } catch (e) {
-          console.log(e);
-          console.log(error);
-          const errorMessage = error && 'data' in error ? JSON.stringify(error.data) : JSON.stringify(getErrorMessage(e));
+          const errorMessage =
+            error && "data" in error
+              ? JSON.stringify(error.data)
+              : JSON.stringify(getErrorMessage(e));
           toast({
             status: "error",
             title: "Error",

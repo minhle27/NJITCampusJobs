@@ -1,10 +1,10 @@
 import studentModel from "../models/Student";
 import employerModel from "../models/Employer";
-import { AuthenticatedRequest } from "../middleware/verifyToken";
 import { Response } from "express";
+import { RequestWithUser } from "../types";
 
 const userController = {
-  getUserById: async (req: AuthenticatedRequest, res: Response) => {
+  getUserById: async (req: RequestWithUser, res: Response) => {
     const employer = await employerModel.findById(req.params.id);
     if (employer) return res.status(200).json(employer);
     const student = await studentModel.findById(req.params.id);

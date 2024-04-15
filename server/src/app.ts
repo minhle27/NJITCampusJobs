@@ -5,9 +5,12 @@ import helmet from "helmet";
 import morgan from "morgan";
 import "express-async-errors";
 import config from "./utils/config";
+import session from "express-session";
+import { UserWithId } from "./types";
 
 import unknownEndpoint from "./middleware/unknownEndpoints";
 import errorHandler from "./middleware/errorHandler";
+import populateCurUser from "./middleware/populateCurUser";
 
 import authRouter from "./routes/auth";
 import postRouter from "./routes/post";
@@ -17,6 +20,13 @@ import applicationRouter from "./routes/application";
 import conversationRouter from "./routes/conversation";
 import messageRouter from "./routes/message";
 import userRouter from "./routes/user";
+import socketRouter from "./routes/socket";
+
+declare module "express-session" {
+  interface SessionData {
+    user: UserWithId;
+  }
+}
 
 const app = express();
 
@@ -49,6 +59,16 @@ app.use(cors());
 app.use(helmet());
 app.use(morgan("common"));
 
+app.use(
+  session({
+    secret: "cat cute",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
+app.use(populateCurUser);
+
 // Routes
 app.get("/api/ping", (_req, res) => {
   console.log("someone pinged here");
@@ -63,6 +83,7 @@ app.use("/api/application", applicationRouter);
 app.use("/api/conversation", conversationRouter);
 app.use("/api/message", messageRouter);
 app.use("/api/user", userRouter);
+app.use("/api/initsocket", socketRouter);
 
 // Middleware
 app.use(unknownEndpoint);

@@ -21,8 +21,8 @@ async function seedConversation() {
         console.log("Failed to fetch user");
         return;
       }
-      members.push(user1[0]);
-      members.push(user2[0]);
+      members.push(user1[0].toString());
+      members.push(user2[0].toString());
       const newCon = new conversationModel({
         members,
         messageCount: 20,

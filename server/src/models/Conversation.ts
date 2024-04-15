@@ -2,9 +2,7 @@ import mongoose, { InferSchemaType } from "mongoose";
 
 const conversationSchema = new mongoose.Schema(
   {
-    members: {
-      type: Array,
-    },
+    members: [String],
     messageCount: {
       type: Number,
       default: 0,

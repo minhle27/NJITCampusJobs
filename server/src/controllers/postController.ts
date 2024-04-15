@@ -1,14 +1,14 @@
 import employerModel from "../models/Employer";
 import jobModel from "../models/Job";
 import { Response } from "express";
-import { AuthenticatedRequest } from "../middleware/verifyToken";
 import fieldValidate from "../utils/fieldValidate";
 import studentModel from "../models/Student";
 import applicationModel from "../models/Application";
+import { RequestWithUser } from "../types";
 
 const postController = {
   getAllPostsFromAnEmployer: async (
-    req: AuthenticatedRequest,
+    req: RequestWithUser,
     res: Response
   ) => {
     const employer = await employerModel.findById(req.params.id).populate({
@@ -20,7 +20,7 @@ const postController = {
     return res.status(200).json(employer.jobPosts);
   },
 
-  updateAPost: async (req: AuthenticatedRequest, res: Response) => {
+  updateAPost: async (req: RequestWithUser, res: Response) => {
     const newPost = fieldValidate.processNewPost(req.body);
     const post = await jobModel.findById(req.params.id);
     if (!post) {
@@ -30,7 +30,7 @@ const postController = {
     return res.status(200).json("Post has been updated");
   },
 
-  deleteAPost: async (req: AuthenticatedRequest, res: Response) => {
+  deleteAPost: async (req: RequestWithUser, res: Response) => {
     const post = await jobModel.findById(req.params.id);
     if (!post) {
       return res.status(404).json({ error: "Post Not Found" });
@@ -59,12 +59,12 @@ const postController = {
     return res.status(204).end();
   },
 
-  createNewPost: async (req: AuthenticatedRequest, res: Response) => {
+  createNewPost: async (req: RequestWithUser, res: Response) => {
     const job = fieldValidate.processNewPost(req.body);
     const { title, externalApplication, jobDescription, location, salary } =
       job;
 
-    const user = await employerModel.findById(req.user);
+    const user = await employerModel.findById(req.user!._id);
     if (!user) return res.status(404).json({ error: "User Not Found" });
     const newJob = new jobModel({
       employer: user._id,

@@ -6,12 +6,10 @@ import SortBar from "../../Modules/SortBar";
 const FeedPage = () => {
   const [searchValue, setSearchValue] = useState<string>("");
   return (
-    <section className="flex flex-col max-h-[90vh]">
+    <section className="flex flex-col max-h-[90vh] min-w-screen-[1000px]">
       <SearchBar searchValue={searchValue} setSearchValue={setSearchValue} />
       <SortBar />
-      <div className="grow overflow-auto w-3/4 border mx-auto min-w-fit">
-        <FeedList searchValue={searchValue} />
-      </div>
+      <FeedList searchValue={searchValue} />
     </section>
   );
 };

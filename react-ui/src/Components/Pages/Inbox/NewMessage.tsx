@@ -25,6 +25,7 @@ const NewMessage = ({ conversation }: Props) => {
       if (!isLoading) {
         try {
           await sendNewMessage(message);
+          setValue("");
         } catch (err) {
           console.error("Failed to send new message: ", err);
           const errorMessage =

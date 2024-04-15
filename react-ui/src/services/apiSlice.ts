@@ -9,6 +9,7 @@ import {
   Student,
 } from "../types";
 import { JobPost } from "../types";
+import { socket } from "../client-socket";
 
 export const apiSlice = createApi({
   reducerPath: "api",
@@ -22,7 +23,7 @@ export const apiSlice = createApi({
       return headers;
     },
   }),
-  tagTypes: ["Post", "Application", "Message"],
+  tagTypes: ["Post", "Application"],
   endpoints: (builder) => ({
     getEmployerPosts: builder.query<JobPost[], string>({
       query: (employerId) => `/post/employer/${employerId}`,
@@ -131,22 +132,38 @@ export const apiSlice = createApi({
         method: "POST",
         body: newMessage,
       }),
-      invalidatesTags: (_result, _error, arg) => [
-        { type: "Message", id: arg.id },
-      ],
     }),
     getConversationByUser: builder.query<Conversation[], string>({
       query: (userId) => `/conversation/${userId}`,
     }),
     getMessageByConversation: builder.query<Message[], string>({
       query: (conversationId) => `/message/conversation/${conversationId}`,
-      providesTags: (result = []) => [
-        "Message",
-        ...result.map(({ id }: { id: string }) => ({
-          type: "Message" as const,
-          id,
-        })),
-      ],
+      async onCacheEntryAdded(
+        _arg,
+        { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
+      ) {
+        // Add the items to the previous one fetched by the HTTP query at first
+
+        try {
+          // wait for the initial query to resolve before proceeding
+          await cacheDataLoaded; 
+          const addMessages = (message: Message) => {
+            console.log(message);
+            updateCachedData((draft) => {
+              draft.push(message);
+            });
+          }         
+          socket.on('message', addMessages);
+        } catch (err) {
+          // no-op in case `cacheEntryRemoved` resolves before `cacheDataLoaded`,
+          // in which case `cacheDataLoaded` will throw
+          console.error(err);
+        }
+        // cacheEntryRemoved will resolve when the cache subscription is no longer active
+        await cacheEntryRemoved;
+        // perform cleanup steps once the `cacheEntryRemoved` promise resolves
+        socket.off('message');
+      },
     }),
   }),
 });

@@ -18,13 +18,13 @@ import Inbox from "./Components/Pages/Inbox/index.tsx";
 
 const App = () => {
   const auth = useAuth();
-  const isLoginPage = window.location.pathname === "/login";
-  const isRegisterPage = window.location.pathname === "/register";
 
   return (
     <div className="flex flex-col h-screen">
       <Router>
-        {auth.user && !isLoginPage && !isRegisterPage && <NavBar />}
+        <RequireAuth>
+          <NavBar />
+        </RequireAuth>
         <Routes>
           <Route
             path="/"

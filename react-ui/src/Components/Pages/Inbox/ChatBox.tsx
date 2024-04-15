@@ -33,7 +33,7 @@ const ChatBox = ({ conversation }: Props) => {
       <div className="grow overflow-y-auto overflow-x-hidden flex flex-col pb-2">
         {messages.map((msg) => {
           return (
-            <div className="msg-container">
+            <div key={msg.id} className="">
               <SingleMessage
                 message={msg}
                 own={msg.sender === curUserId}

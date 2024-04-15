@@ -14,6 +14,8 @@ postRouter.delete("/:id", verifyToken, postController.deleteAPost);
 
 postRouter.patch("/:id", verifyToken, postController.updateAPost);
 
+postRouter.get("/:id", verifyToken, postController.getPost);
+
 postRouter.patch(
   "/:id/applicants",
   verifyToken,

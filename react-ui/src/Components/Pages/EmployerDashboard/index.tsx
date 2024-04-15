@@ -31,7 +31,6 @@ const EmployerDashboard = () => {
   };
 
   const handleSubmitNewJob = async (values: JobFormFields) => {
-    console.log(values);
     if (!isLoading) {
       try {
         await addNewJob(values).unwrap();

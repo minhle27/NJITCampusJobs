@@ -70,3 +70,16 @@ export interface Application {
   job: JobPost;
   createdAt: Date;
 }
+
+export interface Conversation {
+  id: string;
+  members: Array<string>;
+  messageCount: number;
+}
+
+export interface Message {
+  id: string;
+  content: string;
+  sender: string;
+  createdAt: Date;
+}

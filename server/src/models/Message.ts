@@ -1,26 +1,24 @@
 import mongoose, { InferSchemaType } from "mongoose";
 
-const applicationSchema = new mongoose.Schema(
+const messageSchema = new mongoose.Schema(
   {
-    student: {
+    conversation: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Student",
+      ref: "Conversation",
     },
-    resumeUrl: {
+    sender: {
       type: String,
     },
-    job: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Job",
+    content: {
+      type: String,
     },
-    status: String,
   },
   { timestamps: true }
 );
 
-type applicationSchemaInferType = InferSchemaType<typeof applicationSchema>;
+type messageSchemaInferType = InferSchemaType<typeof messageSchema>;
 
-applicationSchema.set("toJSON", {
+messageSchema.set("toJSON", {
   transform: (_document, returnedObject) => {
     if ("_id" in returnedObject) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
@@ -31,9 +29,9 @@ applicationSchema.set("toJSON", {
   },
 });
 
-const applicationModel = mongoose.model<applicationSchemaInferType>(
-  "Application",
-  applicationSchema
+const messageModel = mongoose.model<messageSchemaInferType>(
+  "Message",
+  messageSchema
 );
 
-export default applicationModel;
+export default messageModel;

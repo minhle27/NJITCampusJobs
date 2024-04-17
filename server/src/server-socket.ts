@@ -46,7 +46,11 @@ const addUser = (user: UserWithId, socket: Socket) => {
 
 const socketManager = {
   init: (httpServer: http.Server) => {
-    io = new Server(httpServer);
+    io = new Server(httpServer, {
+      cors: {
+        origin: "http://localhost:5173",
+      },
+    });
 
     io.on("connection", (socket: Socket) => {
       console.log(`socket has connected ${socket.id}`);

@@ -27,12 +27,20 @@ const messageController = {
     );
     const conversation = await conversationModel.findById(body.conversation);
     if (conversation && conversation.members.length >= 2) {
-      socketManager.getIo().emit("message", savedMessage);
-      // const user1 = conversation.members[0];
-      // const user2 = conversation.members[1];
-      // socketManager.getSocketFromUserID(user1).emit("message", savedMessage);
-      // if (user1 !== user2)
-      //   socketManager.getSocketFromUserID(user2).emit("message", savedMessage);
+      const user1 = conversation.members[0];
+      const user2 = conversation.members[1];
+      const user1Socket = socketManager.getSocketFromUserID(user1);
+      const user2Socket = socketManager.getSocketFromUserID(user2);
+      if (user1 !== user2) {
+        if (user1Socket) {
+          user1Socket.emit("message", savedMessage);
+        }
+        if (user2Socket) {
+          user2Socket.emit("message", savedMessage);
+        }
+      } else {
+        if (user1Socket) user1Socket.emit("message", savedMessage);
+      }
     }
     res.status(200).json(savedMessage);
   },

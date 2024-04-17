@@ -15,10 +15,26 @@ import TrackApplicants from "./Components/Pages/TrackApplicants/index.tsx";
 import NavBar from "./Components/Modules/NavBar.tsx";
 import TrackApplications from "./Components/Pages/TrackApplications/index.tsx";
 import Inbox from "./Components/Pages/Inbox/index.tsx";
+import { useEffect } from "react";
+import { socket } from "./client-socket.ts";
+import { useInitSocketMutation } from "./services/apiSlice.ts";
 
 const App = () => {
   const auth = useAuth();
+  const [initSocket] = useInitSocketMutation();
 
+  useEffect(() => {
+    const onConnect = async () => {
+      await initSocket(socket.id).unwrap();
+    }
+
+    socket.on('connect', onConnect);
+
+    return () => {
+      socket.off('connect', onConnect);
+    };
+  }, [initSocket]);
+  
   return (
     <div className="flex flex-col h-screen">
       <Router>

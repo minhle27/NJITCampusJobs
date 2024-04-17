@@ -98,6 +98,13 @@ export const apiSlice = createApi({
         body: loginInfo,
       }),
     }),
+    initSocket: builder.mutation({
+      query: (socketid) => ({
+        url: "/initsocket",
+        method: "POST",
+        body: { socketid },
+      }),
+    }),
     editPost: builder.mutation({
       query: (post) => {
         const id = post.id;
@@ -142,27 +149,20 @@ export const apiSlice = createApi({
         _arg,
         { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
       ) {
-        // Add the items to the previous one fetched by the HTTP query at first
-
+        const addMessages = (message: Message) => {
+          console.log(message);
+          updateCachedData((draft) => {
+            draft.push(message);
+          });
+        };
         try {
-          // wait for the initial query to resolve before proceeding
-          await cacheDataLoaded; 
-          const addMessages = (message: Message) => {
-            console.log(message);
-            updateCachedData((draft) => {
-              draft.push(message);
-            });
-          }         
-          socket.on('message', addMessages);
+          await cacheDataLoaded;
+          socket.on("message", addMessages);
         } catch (err) {
-          // no-op in case `cacheEntryRemoved` resolves before `cacheDataLoaded`,
-          // in which case `cacheDataLoaded` will throw
           console.error(err);
         }
-        // cacheEntryRemoved will resolve when the cache subscription is no longer active
         await cacheEntryRemoved;
-        // perform cleanup steps once the `cacheEntryRemoved` promise resolves
-        socket.off('message');
+        socket.off("message", addMessages);
       },
     }),
   }),
@@ -185,4 +185,5 @@ export const {
   useGetUserByIdQuery,
   useGetMessageByConversationQuery,
   useWithdrawApplicationMutation,
+  useInitSocketMutation,
 } = apiSlice;

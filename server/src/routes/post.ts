@@ -22,12 +22,6 @@ postRouter.patch(
   postController.updateAPost
 );
 
-postRouter.patch(
-  "/:id/applicants",
-  verifyToken,
-  postController.updateApplicantStatus
-);
-
 postRouter.post(
   "/",
   verifyToken,

@@ -9,6 +9,9 @@ import { setCredentials } from "../../../state/authSlice";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
 import { getErrorMessage } from "../../../utils";
+import { socket } from "../../../client-socket";
+import { useInitSocketMutation } from "../../../services/apiSlice";
+
 // import { getErrorMessage } from "../../../utils";
 interface InputForm {
   email: string;
@@ -22,6 +25,7 @@ const Login = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const toast = useToast();
+  const [initSocket] = useInitSocketMutation();
 
   const formik = useFormik<InputForm>({
     initialValues: {
@@ -45,17 +49,17 @@ const Login = () => {
       ),
     }),
     onSubmit: async (value) => {
-      console.log(value);
       if (!isLoading) {
         try {
           const user = await loginUser(value).unwrap();
-          console.log(user);
           dispatch(setCredentials(user));
+          await initSocket(socket.id).unwrap();
           navigate("/");
         } catch (e) {
-          console.log(e);
-          console.log(error);
-          const errorMessage = error && 'data' in error ? JSON.stringify(error.data) : JSON.stringify(getErrorMessage(e));
+          const errorMessage =
+            error && "data" in error
+              ? JSON.stringify(error.data)
+              : JSON.stringify(getErrorMessage(e));
           toast({
             status: "error",
             title: "Error",

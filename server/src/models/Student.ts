@@ -5,11 +5,14 @@ import { isEmail } from "validator";
 
 type studentSchemaInferType = InferSchemaType<typeof studentSchema>;
 
-export const fileSchema = new mongoose.Schema({
-  fileUrl: String,
-  cloudinaryId: String,
-  isDefault: Boolean,
-});
+export const fileSchema = new mongoose.Schema(
+  {
+    fileUrl: String,
+    cloudinaryId: String,
+    isDefault: Boolean,
+  },
+  { timestamps: true }
+);
 
 export const createDefaultProfilePicture = () => ({
   fileUrl:
@@ -64,7 +67,7 @@ const studentSchema = new mongoose.Schema(
     },
     resume: {
       type: [fileSchema],
-      default: createDefaultFileSchema
+      default: createDefaultFileSchema,
     },
     transcript: {
       type: fileSchema,
@@ -74,6 +77,10 @@ const studentSchema = new mongoose.Schema(
       type: String,
       required: true,
       minlength: [3, "Must be at least 3 characters"],
+    },
+    gpa: {
+      type: String,
+      default: "N/A"
     },
     classYear: {
       start: {
@@ -114,26 +121,6 @@ const studentSchema = new mongoose.Schema(
         message: "Invalid account type",
       },
       required: true,
-    },
-    appliedJobs: {
-      accepted: [
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Job",
-        },
-      ],
-      pending: [
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Job",
-        },
-      ],
-      rejected: [
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Job",
-        },
-      ],
     },
     savedJobs: [
       {
@@ -178,7 +165,6 @@ fileSchema.set("toJSON", {
     }
   },
 });
-
 
 const studentModel = mongoose.model<studentSchemaInferType>(
   "Student",

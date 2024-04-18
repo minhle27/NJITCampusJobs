@@ -22,6 +22,7 @@ async function seedStudents() {
         fullName: faker.person.fullName(),
         phone: Math.random().toString().slice(2, 12),
         profileDescription: faker.lorem.sentence(),
+        gpa: "4.0",
         resume: {
           fileUrl:
             "https://res.cloudinary.com/ddjybuw16/image/upload/v1707926556/Test/resume.pdf",

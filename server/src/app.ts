@@ -13,6 +13,11 @@ import authRouter from "./routes/auth";
 import postRouter from "./routes/post";
 import employerRouter from "./routes/employer";
 import studentRouter from "./routes/student";
+import applicationRouter from "./routes/application";
+import conversationRouter from "./routes/conversation";
+import messageRouter from "./routes/message";
+import userRouter from "./routes/user";
+import socketRouter from "./routes/socket";
 
 const app = express();
 
@@ -33,6 +38,7 @@ mongoose
   });
 
 // Middleware
+app.use(cors());
 app.use(express.json({ limit: "50mb" }));
 app.use(
   express.urlencoded({
@@ -41,7 +47,6 @@ app.use(
     parameterLimit: 50000,
   })
 );
-app.use(cors());
 app.use(helmet());
 app.use(morgan("common"));
 
@@ -55,6 +60,11 @@ app.use("/api/auth", authRouter);
 app.use("/api/post", postRouter);
 app.use("/api/employer", employerRouter);
 app.use("/api/student", studentRouter);
+app.use("/api/application", applicationRouter);
+app.use("/api/conversation", conversationRouter);
+app.use("/api/message", messageRouter);
+app.use("/api/user", userRouter);
+app.use("/api/initsocket", socketRouter);
 
 // Middleware
 app.use(unknownEndpoint);

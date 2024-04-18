@@ -1,21 +1,21 @@
 import { useRef } from "react";
-import { ApplicationWithStatus, JobPost } from "../../../types";
+import { Application } from "../../../types";
 import { ToggleHandle } from "../../Modules/FormFrameModal";
 import DetailsForm, { DetailsFormFields } from "./DetailsForm";
 import { useToast } from "@chakra-ui/react";
-import { useUpdateApplicantStatusMutation } from "../../../services/apiSlice";
 import { getErrorMessage } from "../../../utils";
+import { useApplicationSearch } from "../../../hooks/useApplicationSearch";
+import { useUpdateApplicationStatusMutation } from "../../../services/apiSlice";
 
 interface Props {
-  application: ApplicationWithStatus;
-  post: JobPost;
+  application: Application;
 }
 
-const Applicant = ({ application, post }: Props) => {
+const Applicant = ({ application }: Props) => {
   const detailsFormRef = useRef<ToggleHandle>(null);
   const toast = useToast();
   const [updateStatus, { error, isLoading }] =
-    useUpdateApplicantStatusMutation();
+    useUpdateApplicationStatusMutation();
 
   const handleClick = () => {
     if (detailsFormRef.current) {
@@ -54,11 +54,8 @@ const Applicant = ({ application, post }: Props) => {
       });
     } else {
       const newStatusObject = {
-        studentId: student.id,
-        resumeUrl: application.resumeUrl,
-        oldStatus,
-        newStatus,
-        postId: post.id,
+        status: newStatus,
+        applicationId: application.id,
       };
       try {
         if (!isLoading) await updateStatus(newStatusObject).unwrap();
@@ -114,50 +111,31 @@ const Applicant = ({ application, post }: Props) => {
 };
 
 const ApplicantsList = ({
-  post,
+  applications,
   searchValue,
+  filterBy,
 }: {
-  post: JobPost;
+  applications: Application[];
   searchValue: string;
+  filterBy: string;
 }) => {
-  const acceptedList = post.applicants.accepted;
-  const rejectedList = post.applicants.rejected;
-  const pendingList = post.applicants.pending;
+  let applicationsToShow = useApplicationSearch(searchValue, applications);
 
-  const allList: ApplicationWithStatus[] = acceptedList
-    .map((application) => ({ ...application, status: "accepted" }))
-    .concat(
-      rejectedList.map((application) => ({
-        ...application,
-        status: "rejected",
-      }))
-    )
-    .concat(
-      pendingList.map((application) => ({ ...application, status: "pending" }))
-    );
-
-  if (allList.length <= 0) {
+  if (applicationsToShow.length <= 0) {
     return (
       <div className="text-center font-semibold">No applicants to display</div>
     );
   }
 
-  const bySearchField = (p: ApplicationWithStatus) =>
-    p.student.fullName.toLowerCase().includes(searchValue.toLowerCase());
-  const applicationsToShow =
-    searchValue && allList ? allList.filter(bySearchField) : allList;
+  if (filterBy !== "all") {
+    applicationsToShow = applicationsToShow.filter((application) => application.status === filterBy);
+  }
 
   console.log(searchValue);
   return (
     <div className="flex flex-col overflow-auto">
       {applicationsToShow.map((application) => {
-        return (
-          <Applicant
-            post={post}
-            key={application.id}
-            application={application}
-          />
-        );
+        return <Applicant key={application.id} application={application} />;
       })}
     </div>
   );

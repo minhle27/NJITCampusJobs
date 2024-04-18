@@ -35,7 +35,10 @@ const authController = {
           fullName,
           phone,
           profileDescription,
-          profilePicture: await uploadCloudinary(profilePicture, "profilePicture"),
+          profilePicture: await uploadCloudinary(
+            profilePicture,
+            "profilePicture"
+          ),
           accountType,
           classYear,
           degree,
@@ -58,7 +61,10 @@ const authController = {
           fullName,
           phone,
           profileDescription,
-          profilePicture: await uploadCloudinary(profilePicture, "profilePicture"),
+          profilePicture: await uploadCloudinary(
+            profilePicture,
+            "profilePicture"
+          ),
           accountType,
           department,
         });

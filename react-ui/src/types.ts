@@ -23,8 +23,8 @@ export interface Student extends BaseUser {
     end: number;
   };
   degree: string;
-  resume?: string;
-  transcript?: string;
+  resume?: { fileUrl: string; updatedAt: string }[]; 
+  transcript?: { fileUrl: string; updatedAt: string }; 
   major: string;
 }
 

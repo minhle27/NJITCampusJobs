@@ -5,15 +5,21 @@ const applicationSchema = new mongoose.Schema(
     student: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Student",
+      required: [true, "Required"],
     },
     resumeUrl: {
       type: String,
+      required: [true, "Required"],
     },
     job: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Job",
+      required: [true, "Required"],
     },
-    status: String,
+    status: {
+      type: String,
+      required: [true, "Required"],
+    },
   },
   { timestamps: true }
 );

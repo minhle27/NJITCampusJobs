@@ -61,3 +61,7 @@ export interface Conversation {
   members: Array<string>;
   messageCount: number;
 }
+
+export interface Application {
+  resumeUrl: string;
+}

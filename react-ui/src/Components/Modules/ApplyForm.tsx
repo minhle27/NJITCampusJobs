@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import * as Yup from "yup";
+// import * as Yup from "yup";
 import { useToast } from "@chakra-ui/react";
 import FormFrameModal, { ToggleHandle } from "./FormFrameModal";
 import { JobPost, Student } from "../../types";
@@ -7,6 +7,8 @@ import { Link } from "react-router-dom";
 import { ExportOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
+import { useAddNewApplicationMutation } from "../../services/apiSlice";
+import { getErrorMessage } from "../../utils";
 
 interface ApplyFormFields {
   resume: string;
@@ -21,17 +23,13 @@ interface ApplyFormProps {
   post: JobPost;
   jobFormRef: React.MutableRefObject<ToggleHandle | null>;
   initialFormValues: ApplyFormFields;
-  handleSubmit: (value: ApplyFormFields) => Promise<void>;
 }
 
-const ApplyForm = ({
-  post,
-  jobFormRef,
-  initialFormValues,
-  handleSubmit,
-}: ApplyFormProps) => {
+const ApplyForm = ({ post, jobFormRef, initialFormValues }: ApplyFormProps) => {
   const toast = useToast();
   const auth = useAuth();
+  const [addNewApplication, { isLoading, error }] =
+    useAddNewApplicationMutation();
   const user = auth.user as Student;
 
   const initialResumeState = user.resume?.map((res) => ({
@@ -62,13 +60,47 @@ const ApplyForm = ({
     ]);
   };
 
+  const handleCreateNewApplication = async (values: ApplyFormFields) => {
+    if (!isLoading) {
+      try {
+        await addNewApplication(values).unwrap();
+        toast({
+          status: "success",
+          title: "Application Sent",
+          description: "Employers received your application",
+          isClosable: true,
+        });
+        if (jobFormRef.current) {
+          jobFormRef.current.toggleVisibility();
+        }
+      } catch (err) {
+        console.error("Failed to create new job: ", err);
+        const errorMessage =
+          error && "data" in error
+            ? JSON.stringify(error.data)
+            : JSON.stringify(getErrorMessage(err));
+        toast({
+          status: "error",
+          title: "Error",
+          description: errorMessage,
+          isClosable: true,
+        });
+      }
+    }
+  };
+
   const formik = useFormik<ApplyFormFields>({
     initialValues: initialFormValues,
-    validationSchema: Yup.object({
-      resume: Yup.string().required("Please upload a resume"),
-    }),
     onSubmit: () => {
-      if (preventSubmit) {
+      if (!applyResume) {
+        toast({
+          status: "warning",
+          title: "Please upload an updated resume",
+          description: "Application submitted unsuccessfully",
+          duration: 2000,
+          isClosable: true,
+        });
+      } else if (preventSubmit) {
         toast({
           status: "warning",
           title: "Please submit external application",
@@ -77,7 +109,7 @@ const ApplyForm = ({
           isClosable: true,
         });
       } else if (formik.isValid && !preventSubmit) {
-        handleSubmit(formik.values);
+        handleCreateNewApplication(formik.values);
         toast({
           status: "success",
           title: "Submitted",

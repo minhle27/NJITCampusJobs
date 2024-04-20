@@ -2,6 +2,7 @@ import applicationModel from "../models/Application";
 import { Response } from "express";
 import fieldValidate from "../utils/fieldValidate";
 import { RequestWithUser } from "../types";
+import studentModel from "../models/Student";
 
 const applicationController = {
   getStudentApplications: async (req: RequestWithUser, res: Response) => {
@@ -40,7 +41,22 @@ const applicationController = {
     await applicationModel.findByIdAndDelete(req.params.id);
     return res.status(204).end();
   },
-    
+
+  createNewApplication: async (req: RequestWithUser, res: Response) => {
+    const application = fieldValidate.processNewApplication(req.body);
+    const { resumeUrl } = application;
+
+    const user = await studentModel.findById(req.user!._id);
+    if (!user) return res.status(404).json({ error: "User Not Found" });
+    const newApplication = new applicationModel({
+      student: user._id,
+      resumeUrl,
+    });
+
+    const savedApplication = await newApplication.save();
+    await user.save();
+    return res.status(200).json(savedApplication);
+  },
 };
 
 export default applicationController;

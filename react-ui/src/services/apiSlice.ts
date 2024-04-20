@@ -71,6 +71,15 @@ export const apiSlice = createApi({
         body: registerInfo,
       }),
     }),
+
+    addNewApplication: builder.mutation({
+      query: (applicationInfo) => ({
+        url: "/application",
+        method: "POST",
+        body: applicationInfo,
+      }),
+    }),
+
     updateApplicationStatus: builder.mutation({
       query: ({ status, applicationId }) => {
         return {
@@ -191,4 +200,5 @@ export const {
   useGetMessageByConversationQuery,
   useWithdrawApplicationMutation,
   useGetAllPostsQuery,
+  useAddNewApplicationMutation,
 } = apiSlice;

@@ -78,18 +78,15 @@ const postController = {
     return res.status(200).json(savedJob);
   },
 
-  getAllPosts: async (_req: AuthenticatedRequest, res: Response) => {
-    const allJobPosts = await jobModel.find({}).populate({
-      path: "employer",
-      select: "fullName department profilePicture",
-    });
+  getAllPosts: async (_req: RequestWithUser, res: Response) => {
+    const allJobPosts = await jobModel.find({});
     if (!allJobPosts) {
       return res.status(400).json({ error: "Fetching posts failed" });
     }
     return res.status(200).json(allJobPosts);
   },
 
-  getPost: async (req: AuthenticatedRequest, res: Response) => {
+  getPost: async (req: RequestWithUser, res: Response) => {
     const post = await jobModel.findById(req.params.id).populate({
       path: "employer",
       select: "fullName department profilePicture",

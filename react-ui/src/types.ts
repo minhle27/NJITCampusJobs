@@ -23,9 +23,18 @@ export interface Student extends BaseUser {
     end: number;
   };
   degree: string;
-  resume?: string;
+  resume?: Array<Resume>;
   transcript?: string;
   major: string;
+}
+
+export interface Resume {
+  cloudinaryId: string;
+  createdAt: string;
+  fileUrl: string;
+  id: string;
+  isDefault: boolean;
+  updatedAt: string;
 }
 
 export interface Employer extends BaseUser {
@@ -46,12 +55,12 @@ export interface ErrorType {
 
 export interface JobPost {
   externalApplication: string;
-  employer: string | Employer;
+  employer: string;
   title: string;
   jobDescription: string;
   location: string;
   salary: number;
-  status: "open" | "closed";
+  status: "open" | "close";
   createdAt: string;
   updatedAt: string;
   id: string;

@@ -22,13 +22,17 @@
   .sort-bar {
     @apply flex items-center cursor-pointer hover:bg-search-bar space-x-2 px-1;
   }
+
+  .customNavLink {
+    @apply py-[1%] px-[2%] mx-[1%] text-center text-[1.25rem] font-semibold font-montserat hover:bg-gray-300;
+  }
 }
 
-.customNavLink {
+/* .customNavLink {
   padding: 1% 2%;
   margin: 0 1%;
   text-align: center;
   font-size: 1.25rem;
   font-weight: 600;
   font-family: "Montserrat";
-}
+} */

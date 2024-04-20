@@ -10,6 +10,8 @@ export default {
         "search-bar": "#F4EEEE",
         "cyan-feed": "#82E6CE",
         "sort-bar": "#F7F5F5",
+        "job-description": "#7E7B7B",
+        "click-button-1": "#94DA69",
       },
       fontSize: {
         14: "14px",
@@ -23,6 +25,7 @@ export default {
       },
       height: {
         "feed-list": "70dvh",
+        "job-description": "68svh",
       },
       minHeight: {
         "feed-list": "70dvh",

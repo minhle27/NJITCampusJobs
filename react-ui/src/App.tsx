@@ -25,22 +25,23 @@ const App = () => {
 
   useEffect(() => {
     const onConnect = async () => {
-      await initSocket(socket.id).unwrap();
-    }
+      try {
+        await initSocket(socket.id).unwrap();
+      } catch (err) { /* empty */ }
+    };
 
-    socket.on('connect', onConnect);
+    socket.on("connect", onConnect);
 
     return () => {
-      socket.off('connect', onConnect);
+      socket.off("connect", onConnect);
     };
-  }, [initSocket]);
-  
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className="flex flex-col h-screen">
       <Router>
-        <RequireAuth>
-          <NavBar />
-        </RequireAuth>
+        {auth.user && <NavBar />}
         <Routes>
           <Route
             path="/"

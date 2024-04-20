@@ -31,15 +31,12 @@ const messageController = {
       const user2 = conversation.members[1];
       const user1Socket = socketManager.getSocketFromUserID(user1);
       const user2Socket = socketManager.getSocketFromUserID(user2);
-      if (user1 !== user2) {
-        if (user1Socket) {
-          user1Socket.emit("message", savedMessage);
-        }
-        if (user2Socket) {
-          user2Socket.emit("message", savedMessage);
-        }
-      } else {
-        if (user1Socket) user1Socket.emit("message", savedMessage);
+
+      if (user1Socket) {
+        user1Socket.emit("message", savedMessage);
+      }
+      if (user2Socket) {
+        user2Socket.emit("message", savedMessage);
       }
     }
     res.status(200).json(savedMessage);

@@ -42,7 +42,7 @@ const verifyToken = async (
   }
 
   const loggedinUser = { ...user, _id: user._id.toString() };
-  req.session.user = loggedinUser as unknown as UserWithId;
+  req.user = loggedinUser as unknown as UserWithId;
   return next();
 };
 

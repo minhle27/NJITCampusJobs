@@ -9,7 +9,8 @@ import { setCredentials } from "../../../state/authSlice";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
 import { getErrorMessage } from "../../../utils";
-import { post, socket } from "../../../client-socket";
+import { socket } from "../../../client-socket";
+import { useInitSocketMutation } from "../../../services/apiSlice";
 
 // import { getErrorMessage } from "../../../utils";
 interface InputForm {
@@ -24,6 +25,7 @@ const Login = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const toast = useToast();
+  const [initSocket] = useInitSocketMutation();
 
   const formik = useFormik<InputForm>({
     initialValues: {
@@ -51,9 +53,7 @@ const Login = () => {
         try {
           const user = await loginUser(value).unwrap();
           dispatch(setCredentials(user));
-          await post("http://localhost:3001/api/initsocket", {
-            socketid: socket.id,
-          });
+          await initSocket(socket.id).unwrap();
           navigate("/");
         } catch (e) {
           const errorMessage =

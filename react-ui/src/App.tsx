@@ -17,16 +17,35 @@ import TrackApplications from "./Components/Pages/TrackApplications/index.tsx";
 import Inbox from "./Components/Pages/Inbox/index.tsx";
 import FeedPage from "./Components/Pages/FeedPage/FeedPage.tsx";
 import JobDetail from "./Components/Pages/JobDetail/JobDetail.tsx";
+import { useEffect } from "react";
+import { socket } from "./client-socket.ts";
+import { useInitSocketMutation } from "./services/apiSlice.ts";
 
 const App = () => {
   const auth = useAuth();
+  const [initSocket] = useInitSocketMutation();
+
+  useEffect(() => {
+    const onConnect = async () => {
+      try {
+        await initSocket(socket.id).unwrap();
+      } catch (err) {
+        /* empty */
+      }
+    };
+
+    socket.on("connect", onConnect);
+
+    return () => {
+      socket.off("connect", onConnect);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="flex flex-col h-screen">
       <Router>
-        <RequireAuth>
-          <NavBar />
-        </RequireAuth>
+        {auth.user && <NavBar />}
         <Routes>
           <Route
             path="/"

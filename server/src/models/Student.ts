@@ -5,11 +5,14 @@ import { isEmail } from "validator";
 
 type studentSchemaInferType = InferSchemaType<typeof studentSchema>;
 
-export const fileSchema = new mongoose.Schema({
-  fileUrl: String,
-  cloudinaryId: String,
-  isDefault: Boolean,
-});
+export const fileSchema = new mongoose.Schema(
+  {
+    fileUrl: String,
+    cloudinaryId: String,
+    isDefault: Boolean,
+  },
+  { timestamps: true }
+);
 
 export const createDefaultProfilePicture = () => ({
   fileUrl:
@@ -74,6 +77,10 @@ const studentSchema = new mongoose.Schema(
       type: String,
       required: true,
       minlength: [3, "Must be at least 3 characters"],
+    },
+    gpa: {
+      type: String,
+      default: "N/A"
     },
     classYear: {
       start: {

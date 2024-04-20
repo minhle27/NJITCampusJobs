@@ -6,7 +6,6 @@ import { Request, Response } from "express";
 import { uploadCloudinary } from "../utils/helpers";
 import config from "../utils/config";
 import jwt from "jsonwebtoken";
-import { UserWithId } from "../types";
 
 const authController = {
   register: async (req: Request, res: Response) => {
@@ -112,9 +111,6 @@ const authController = {
       email: user.email,
       id: user._id,
     };
-
-    const loggedinUser = { ...user, _id: user._id.toString() };
-    req.session.user = loggedinUser as unknown as UserWithId;
 
     const token = jwt.sign(userForToken, config.SECRET as string);
     return res.status(200).send({ token, user });

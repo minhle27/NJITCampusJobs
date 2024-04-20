@@ -9,15 +9,8 @@ interface Props {
 
 const Feed = ({ post }: Props) => {
   const navigate = useNavigate();
-  let employerId;
 
-  if (typeof post.employer === "string") {
-    employerId = post.employer;
-  } else {
-    employerId = post.employer.id;
-  }
-
-  const { data: employer } = useGetEmployerQuery(employerId);
+  const { data: employer } = useGetEmployerQuery(post.employer);
   return (
     <div
       className="min-w-[300px] flex flex-col shadow-lg rounded-md p-6 bg-gray-100 shadow-slate-300 transition ease-in-out hover:scale-105 hover:bg-gray-300 font-montserat m-3 justify-between cursor-default"
@@ -43,7 +36,7 @@ const Feed = ({ post }: Props) => {
           className="flex text-16 font-semibold py-1 items-center"
           onClick={(e) => {
             e.stopPropagation();
-            navigate(`/employer/${employerId}`);
+            navigate(`/employer/${post.employer}`);
           }}
         >
           <img

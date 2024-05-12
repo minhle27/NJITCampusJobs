@@ -7,6 +7,8 @@ import {
   Employer,
   Message,
   Student,
+  UploadFile,
+  UploadedFileType,
 } from "../types";
 import { JobPost } from "../types";
 import { socket } from "../client-socket";
@@ -69,6 +71,14 @@ export const apiSlice = createApi({
         url: "/auth/register",
         method: "POST",
         body: registerInfo,
+      }),
+    }),
+
+    uploadFile: builder.mutation<UploadedFileType, UploadFile>({
+      query: (fileData) => ({
+        url: "/upload",
+        method: "POST",
+        body: fileData,
       }),
     }),
 
@@ -202,4 +212,5 @@ export const {
   useGetAllPostsQuery,
   useAddNewApplicationMutation,
   useInitSocketMutation,
+  useUploadFileMutation,
 } = apiSlice;

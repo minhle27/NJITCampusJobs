@@ -18,6 +18,7 @@ import conversationRouter from "./routes/conversation";
 import messageRouter from "./routes/message";
 import userRouter from "./routes/user";
 import socketRouter from "./routes/socket";
+import uploadFileRouter from "./routes/uploadfile";
 
 const app = express();
 
@@ -65,6 +66,7 @@ app.use("/api/conversation", conversationRouter);
 app.use("/api/message", messageRouter);
 app.use("/api/user", userRouter);
 app.use("/api/initsocket", socketRouter);
+app.use("/api/upload", uploadFileRouter);
 
 // Middleware
 app.use(unknownEndpoint);

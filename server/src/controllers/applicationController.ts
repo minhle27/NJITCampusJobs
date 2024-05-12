@@ -44,18 +44,20 @@ const applicationController = {
 
   createNewApplication: async (req: RequestWithUser, res: Response) => {
     const application = fieldValidate.processNewApplication(req.body);
-    const { resumeUrl } = application;
+    const { resumeUrl, job, status } = application;
 
     const user = await studentModel.findById(req.user!._id);
     if (!user) return res.status(404).json({ error: "User Not Found" });
     const newApplication = new applicationModel({
       student: user._id,
       resumeUrl,
+      job,
+      status,
     });
 
     const savedApplication = await newApplication.save();
     await user.save();
-    return res.status(200).json(savedApplication);
+    return res.status(201).json(savedApplication);
   },
 };
 

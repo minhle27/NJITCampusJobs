@@ -1,5 +1,4 @@
 import { useFormik } from "formik";
-// import * as Yup from "yup";
 import { useToast } from "@chakra-ui/react";
 import FormFrameModal, { ToggleHandle } from "./FormFrameModal";
 import { JobPost, Student } from "../../types";
@@ -7,69 +6,73 @@ import { Link } from "react-router-dom";
 import { ExportOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
-import { useAddNewApplicationMutation } from "../../services/apiSlice";
-import { getErrorMessage } from "../../utils";
+import {
+  useAddNewApplicationMutation,
+  useUploadFileMutation,
+} from "../../services/apiSlice";
+import { formatDate, getErrorMessage } from "../../utils";
+import { format } from "date-fns";
 
 interface ApplyFormFields {
-  resume: string;
+  job: string;
+  resumeUrl: string;
+  student: string;
+  status: string;
 }
 
 interface ResumeStateType {
-  url: string;
+  url: string | undefined;
   date: string;
 }
 
 interface ApplyFormProps {
   post: JobPost;
   jobFormRef: React.MutableRefObject<ToggleHandle | null>;
-  initialFormValues: ApplyFormFields;
 }
 
-const ApplyForm = ({ post, jobFormRef, initialFormValues }: ApplyFormProps) => {
-  const toast = useToast();
-  const auth = useAuth();
-  const [addNewApplication, { isLoading, error }] =
-    useAddNewApplicationMutation();
-  const user = auth.user as Student;
-
-  const initialResumeState = user.resume?.map((res) => ({
-    url: res.fileUrl,
-    date: res.updatedAt,
-  }));
-
-  const [resumeList, setResumeList] = useState<ResumeStateType[] | undefined>(
-    initialResumeState
-  );
+const ApplyForm = ({ post, jobFormRef }: ApplyFormProps) => {
   const [applyResume, setApplyResume] = useState<string | undefined>("");
-  console.log(applyResume);
-
   const [preventSubmit, setPreventSubmit] = useState<boolean>(
     post.externalApplication !== ""
   );
+  const [addNewApplication, { isLoading, error }] =
+    useAddNewApplicationMutation();
+  const [uploadFile, { isLoading: isFileLoading, error: err }] =
+    useUploadFileMutation();
 
-  const handleUploadResume = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const toast = useToast();
+  const auth = useAuth();
+  const user = auth.user as Student;
+
+  let initialResumeState: ResumeStateType[] = [];
+  if (user.resume) {
+    initialResumeState = user.resume.map((res) => ({
+      url: res.fileUrl,
+      date: formatDate(res.updatedAt.toString()),
+    }));
+  }
+  const [resumeList, setResumeList] =
+    useState<ResumeStateType[]>(initialResumeState);
+
+  const handleUploadResume = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     const file = e.target.files[0];
-    const date = new Date();
-    const day = date.getDate();
-    const month = date.getMonth();
-    const year = date.getFullYear();
-    setResumeList([
-      ...resumeList,
-      { url: file.name, date: `${month}/${day}/${year}` },
-    ]);
+    const date = format(new Date(), "MMMM d, yyyy");
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = async () => {
+      console.log(reader.result);
+      const result = await uploadFile({
+        dataURI: reader.result,
+      }).unwrap();
+      setResumeList([...resumeList, { url: result?.fileUrl, date }]);
+    };
   };
 
   const handleCreateNewApplication = async (values: ApplyFormFields) => {
     if (!isLoading) {
       try {
         await addNewApplication(values).unwrap();
-        toast({
-          status: "success",
-          title: "Application Sent",
-          description: "Employers received your application",
-          isClosable: true,
-        });
         if (jobFormRef.current) {
           jobFormRef.current.toggleVisibility();
         }
@@ -90,7 +93,12 @@ const ApplyForm = ({ post, jobFormRef, initialFormValues }: ApplyFormProps) => {
   };
 
   const formik = useFormik<ApplyFormFields>({
-    initialValues: initialFormValues,
+    initialValues: {
+      resumeUrl: "",
+      job: post.id,
+      student: user.id,
+      status: "pending",
+    },
     onSubmit: () => {
       if (!applyResume) {
         toast({
@@ -109,7 +117,13 @@ const ApplyForm = ({ post, jobFormRef, initialFormValues }: ApplyFormProps) => {
           isClosable: true,
         });
       } else if (formik.isValid && !preventSubmit) {
-        handleCreateNewApplication(formik.values);
+        const application = {
+          resumeUrl: applyResume,
+          job: post.id,
+          student: user.id,
+          status: "pending",
+        };
+        handleCreateNewApplication(application);
         toast({
           status: "success",
           title: "Submitted",
@@ -139,41 +153,40 @@ const ApplyForm = ({ post, jobFormRef, initialFormValues }: ApplyFormProps) => {
         <div className="font-bold">Resume</div>
         <div>Be sure to include an updated resume *</div>
         <div className="flex flex-col space-y-2">
-          {resumeList?.map((resume, id) => (
-            <div
-              key={id}
-              className={`flex cursor-default justify-between items-center border-2 border-black rounded-xl ${applyResume === resume.url ? "bg-gray-300" : ""}`}
-              onClick={() => setApplyResume(resume.url)}
-            >
-              <div className="flex items-center">
-                <div className="bg-gray-400 rounded-l-xl px-4 py-6 font-semibold">
-                  {resume.url.split(".")[
-                    // eslint-disable-next-line no-unexpected-multiline
-                    resume.url.split(".").length - 1
-                  ].toUpperCase()}
-                </div>
-                <div className="text-14 px-4">
-                  <div>
-                    {resume.url.split("/")[resume.url.split("/").length - 1]
-                      .length < 30
-                      ? resume.url.split("/")[resume.url.split("/").length - 1]
-                      : resume.url.split("/")[
-                          // eslint-disable-next-line no-unexpected-multiline
-                          resume.url.split("/").length - 1
-                        ].substring(0, 30) + "..."}
+          {resumeList?.map((resume, id) => {
+            if (resume.url)
+              return (
+                <div
+                  key={id}
+                  className={`flex cursor-default justify-between items-center border-2 border-black rounded-xl ${applyResume === resume.url ? "bg-gray-300" : ""}`}
+                  onClick={() => setApplyResume(resume.url)}
+                >
+                  <div className="flex items-center">
+                    <div className="bg-gray-400 rounded-l-xl px-4 py-6 font-semibold z-auto">
+                      {resume.url?.split(".").slice(-1)[0].toUpperCase()}
+                    </div>
+                    <div className="text-14 px-4">
+                      <div>
+                        {resume?.url.split("/").slice(-1)[0].length < 30
+                          ? resume.url.split("/").slice(-1)[0]
+                          : resume.url
+                              .split("/")
+                              .slice(-1)[0]
+                              .substring(0, 30) + "..."}
+                      </div>
+                      <div>Last used on {resume.date}</div>
+                    </div>
                   </div>
-                  <div>Last used on {resume.date}</div>
+                  <Link
+                    to={resume?.url}
+                    target="_blank"
+                    className="text-blue-600 mr-10 hover:underline"
+                  >
+                    View
+                  </Link>
                 </div>
-              </div>
-              <Link
-                to={resume.url}
-                target="_blank"
-                className="text-blue-600 mr-10 hover:underline"
-              >
-                View
-              </Link>
-            </div>
-          ))}
+              );
+          })}
         </div>
         <label
           htmlFor="uploadResume"

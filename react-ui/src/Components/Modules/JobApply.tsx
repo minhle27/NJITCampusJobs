@@ -5,6 +5,7 @@ import { useToast } from "@chakra-ui/react";
 import { useRef } from "react";
 import { ToggleHandle } from "./FormFrameModal";
 import ApplyForm from "./ApplyForm";
+import { useAuth } from "../../hooks/useAuth";
 
 interface JobApplyProps {
   post: JobPost;
@@ -13,10 +14,8 @@ interface JobApplyProps {
 const JobApply = ({ post }: JobApplyProps) => {
   const toast = useToast();
   const jobFormRef = useRef<ToggleHandle>(null);
-
-  const initialFormValues = {
-    resume: "hello",
-  };
+  const auth = useAuth();
+  const user = auth.user;
 
   const handleApplyForm = () => {
     if (jobFormRef.current) {
@@ -35,8 +34,6 @@ const JobApply = ({ post }: JobApplyProps) => {
       isClosable: true,
     });
   };
-
-  const handleSubmitAplication = async () => {};
   return (
     <section>
       <section>
@@ -67,21 +64,19 @@ const JobApply = ({ post }: JobApplyProps) => {
               <div>Share</div>
             </div>
           </div>
-
-          <button
-            className="bg-click-button-1 rounded-xl font-semibold px-4 my-2 hover:bg-lime-600"
-            onClick={handleApplyForm}
-          >
-            {post.externalApplication ? "apply externally" : "1-click apply"}
-          </button>
+          {user?.accountType === "student" ? (
+            <button
+              className="bg-click-button-1 rounded-xl font-semibold px-4 my-2 hover:bg-lime-600"
+              onClick={handleApplyForm}
+            >
+              {post.externalApplication ? "apply externally" : "1-click apply"}
+            </button>
+          ) : (
+            ""
+          )}
         </div>
       </section>
-      <ApplyForm
-        jobFormRef={jobFormRef}
-        post={post}
-        initialFormValues={initialFormValues}
-        handleSubmit={handleSubmitAplication}
-      />
+      <ApplyForm jobFormRef={jobFormRef} post={post} />
     </section>
   );
 };

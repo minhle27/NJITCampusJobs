@@ -87,3 +87,13 @@ export interface Message {
   sender: string;
   createdAt: Date;
 }
+
+export interface UploadedFileType {
+  fileUrl: string;
+  cloudinaryId: string;
+  isDefault: boolean;
+}
+
+export interface UploadFile {
+  dataURI: FileReadType;
+}

@@ -64,4 +64,11 @@ export interface Conversation {
 
 export interface Application {
   resumeUrl: string;
+  job: string;
+  status: string;
+  student: string;
+}
+
+export interface UploadFile {
+  dataURI: string;
 }

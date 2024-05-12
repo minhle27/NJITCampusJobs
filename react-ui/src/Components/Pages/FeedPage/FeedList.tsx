@@ -1,7 +1,6 @@
 import Feed from "../../Modules/Feed";
 import { useGetAllPostsQuery } from "../../../services/apiSlice";
 import { JobPost } from "../../../types";
-import { useState } from "react";
 import { Spinner } from "@chakra-ui/react";
 
 interface FeedProps {

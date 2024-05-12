@@ -1,4 +1,11 @@
-import { User, LoginInfo, NewJobPost, Application, NewMessage } from "../types";
+import {
+  User,
+  LoginInfo,
+  NewJobPost,
+  Application,
+  NewMessage,
+  UploadFile,
+} from "../types";
 import { isEmail } from "validator";
 
 const isString = (text: unknown): text is string => {
@@ -156,6 +163,10 @@ const fieldValidate = {
 
   processNewApplication: (object: unknown): Application => {
     return object as Application;
+  },
+
+  processFileUpload: (object: unknown): UploadFile => {
+    return object as UploadFile;
   },
 };
 

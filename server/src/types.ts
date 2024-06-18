@@ -61,3 +61,14 @@ export interface Conversation {
   members: Array<string>;
   messageCount: number;
 }
+
+export interface Application {
+  resumeUrl: string;
+  job: string;
+  status: string;
+  student: string;
+}
+
+export interface UploadFile {
+  dataURI: string;
+}

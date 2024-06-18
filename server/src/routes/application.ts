@@ -28,5 +28,10 @@ applicationRouter.patch(
   applicationController.updateApplicationStatus
 );
 
+applicationRouter.post(
+  "/",
+  verifyToken,
+  applicationController.createNewApplication
+);
 
 export default applicationRouter;

@@ -39,7 +39,7 @@ const NavBar = () => {
             className="customNavLink"
             onClick={() => {
               if (route === "/Jobs") {
-                return handleClick("/");
+                return handleClick("/post");
               }
               if (route === "/Dashboard") {
                 return handleClick(`/dashboard/${auth.user!.id}`);

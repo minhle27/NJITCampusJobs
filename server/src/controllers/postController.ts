@@ -7,10 +7,7 @@ import applicationModel from "../models/Application";
 import { RequestWithUser } from "../types";
 
 const postController = {
-  getAllPostsFromAnEmployer: async (
-    req: RequestWithUser,
-    res: Response
-  ) => {
+  getAllPostsFromAnEmployer: async (req: RequestWithUser, res: Response) => {
     const employer = await employerModel.findById(req.params.id).populate({
       path: "jobPosts",
     });
@@ -79,6 +76,25 @@ const postController = {
     user.jobPosts = user.jobPosts.concat(savedJob._id);
     await user.save();
     return res.status(200).json(savedJob);
+  },
+
+  getAllPosts: async (_req: RequestWithUser, res: Response) => {
+    const allJobPosts = await jobModel.find({});
+    if (!allJobPosts) {
+      return res.status(400).json({ error: "Fetching posts failed" });
+    }
+    return res.status(200).json(allJobPosts);
+  },
+
+  getPost: async (req: RequestWithUser, res: Response) => {
+    const post = await jobModel.findById(req.params.id).populate({
+      path: "employer",
+      select: "fullName department profilePicture",
+    });
+    if (!post) {
+      return res.status(400).json({ error: "Post not found" });
+    }
+    return res.status(200).json(post);
   },
 };
 

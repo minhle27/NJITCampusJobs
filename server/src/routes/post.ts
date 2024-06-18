@@ -10,22 +10,14 @@ postRouter.get(
   postController.getAllPostsFromAnEmployer
 );
 
-postRouter.delete(
-  "/:id",
-  verifyToken,
-  postController.deleteAPost
-);
+postRouter.delete("/:id", verifyToken, postController.deleteAPost);
 
-postRouter.patch(
-  "/:id",
-  verifyToken,
-  postController.updateAPost
-);
+postRouter.patch("/:id", verifyToken, postController.updateAPost);
 
-postRouter.post(
-  "/",
-  verifyToken,
-  postController.createNewPost
-);
+postRouter.get("/:id", verifyToken, postController.getPost);
+
+postRouter.post("/", verifyToken, postController.createNewPost);
+
+postRouter.get("/", verifyToken, postController.getAllPosts);
 
 export default postRouter;

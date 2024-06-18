@@ -7,6 +7,8 @@ import {
   Employer,
   Message,
   Student,
+  UploadFile,
+  UploadedFileType,
 } from "../types";
 import { JobPost } from "../types";
 import { socket } from "../client-socket";
@@ -71,6 +73,23 @@ export const apiSlice = createApi({
         body: registerInfo,
       }),
     }),
+
+    uploadFile: builder.mutation<UploadedFileType, UploadFile>({
+      query: (fileData) => ({
+        url: "/upload",
+        method: "POST",
+        body: fileData,
+      }),
+    }),
+
+    addNewApplication: builder.mutation({
+      query: (applicationInfo) => ({
+        url: "/application",
+        method: "POST",
+        body: applicationInfo,
+      }),
+    }),
+
     updateApplicationStatus: builder.mutation({
       query: ({ status, applicationId }) => {
         return {
@@ -117,6 +136,7 @@ export const apiSlice = createApi({
       },
       invalidatesTags: (_result, _error, arg) => [{ type: "Post", id: arg.id }],
     }),
+
     deletePost: builder.mutation({
       query: (id) => ({
         url: `/post/${id}`,
@@ -165,6 +185,10 @@ export const apiSlice = createApi({
         socket.off("message", addMessages);
       },
     }),
+
+    getAllPosts: builder.query<JobPost[], void>({
+      query: () => "/post",
+    }),
   }),
 });
 
@@ -185,5 +209,8 @@ export const {
   useGetUserByIdQuery,
   useGetMessageByConversationQuery,
   useWithdrawApplicationMutation,
+  useGetAllPostsQuery,
+  useAddNewApplicationMutation,
   useInitSocketMutation,
+  useUploadFileMutation,
 } = apiSlice;

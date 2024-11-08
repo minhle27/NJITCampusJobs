@@ -5,7 +5,7 @@ export interface BaseUser {
   email: string;
   fullName: string;
   phone: string;
-  profileDescription?: string;
+  profileDescription: string;
   profilePicture: FileAsset;
 }
 
@@ -17,11 +17,12 @@ interface FileAsset {
 }
 
 export interface Student extends BaseUser {
-  accountType: "student";
+  accountType: 'student';
   classYear: {
     start: number;
     end: number;
   };
+  gpa: string;
   degree: string;
   resume?: Array<Resume>;
   transcript?: string;
@@ -38,7 +39,7 @@ export interface Resume {
 }
 
 export interface Employer extends BaseUser {
-  accountType: "employer";
+  accountType: 'employer';
   department: string;
 }
 
@@ -60,7 +61,7 @@ export interface JobPost {
   jobDescription: string;
   location: string;
   salary: number;
-  status: "open" | "close";
+  status: 'open' | 'close';
   createdAt: string;
   updatedAt: string;
   id: string;

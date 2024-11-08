@@ -1,6 +1,7 @@
-import type { PayloadAction } from '@reduxjs/toolkit'
-import type { User } from '../types'
 import type { RootState } from '../app/store'
+import type { User } from '../types'
+import type { PayloadAction } from '@reduxjs/toolkit'
+
 import { createAppSlice } from '../app/createAppSlice'
 
 type AuthState = {

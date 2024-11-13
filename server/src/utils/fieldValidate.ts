@@ -5,6 +5,7 @@ import {
   Application,
   NewMessage,
   UploadFile,
+  Employer,
 } from "../types";
 import { isEmail } from "validator";
 
@@ -167,6 +168,10 @@ const fieldValidate = {
 
   processFileUpload: (object: unknown): UploadFile => {
     return object as UploadFile;
+  },
+
+  processNewEmployerInformation: (object: unknown): Employer => {
+    return object as Employer;
   },
 };
 

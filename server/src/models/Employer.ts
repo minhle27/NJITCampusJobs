@@ -38,12 +38,12 @@ const employerSchema = new mongoose.Schema(
     department: {
       type: String,
       required: true,
-      maxlength: [100, "Must be 100 characters or less"],
+      maxlength: [2000, "Must be 2000 characters or less"],
       minlength: [2, "Must be at least 2 characters"],
     },
     profileDescription: {
       type: String,
-      maxlength: [279, "Must be 279 characters or less"],
+      maxlength: [2000, "Must be 2000 characters or less"],
     },
     profilePicture: {
       type: fileSchema,

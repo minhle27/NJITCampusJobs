@@ -3,7 +3,6 @@ import fieldValidate from "../utils/fieldValidate";
 import studentModel from "../models/Student";
 import employerModel from "../models/Employer";
 import { Request, Response } from "express";
-import { uploadCloudinary } from "../utils/helpers";
 import config from "../utils/config";
 import jwt from "jsonwebtoken";
 
@@ -15,8 +14,6 @@ const authController = {
       email,
       fullName,
       phone,
-      profileDescription,
-      profilePicture,
       accountType,
     } = user;
     const salt = await bcrypt.genSalt();
@@ -24,7 +21,7 @@ const authController = {
 
     switch (accountType) {
       case "student": {
-        const { classYear, degree, major, resume, transcript } = user;
+        const { classYear, degree, major } = user;
         const existedUser = await studentModel.findOne({ email });
         if (existedUser)
           return res.status(409).json({ error: "Email is taken " });
@@ -34,16 +31,9 @@ const authController = {
           email,
           fullName,
           phone,
-          profileDescription,
-          profilePicture: await uploadCloudinary(
-            profilePicture,
-            "profilePicture"
-          ),
           accountType,
           classYear,
           degree,
-          resume: await uploadCloudinary(resume, "resume"),
-          transcript: await uploadCloudinary(transcript, "transcript"),
           major,
         });
         const savedStudent = await newStudent.save();
@@ -60,11 +50,6 @@ const authController = {
           email,
           fullName,
           phone,
-          profileDescription,
-          profilePicture: await uploadCloudinary(
-            profilePicture,
-            "profilePicture"
-          ),
           accountType,
           department,
         });

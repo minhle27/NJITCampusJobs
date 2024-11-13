@@ -13,12 +13,14 @@ import authRouter from "./routes/auth";
 import postRouter from "./routes/post";
 import employerRouter from "./routes/employer";
 import studentRouter from "./routes/student";
-import applicationRouter from "./routes/application";
+
 import conversationRouter from "./routes/conversation";
 import messageRouter from "./routes/message";
 import userRouter from "./routes/user";
 import socketRouter from "./routes/socket";
 import uploadFileRouter from "./routes/uploadfile";
+import presignedUrlRouter from "./routes/presignedUpload";
+import applicationRouter from "./routes/application";
 
 const app = express();
 
@@ -58,15 +60,16 @@ app.get("/api/ping", (_req, res) => {
 });
 
 app.use("/api/auth", authRouter);
-app.use("/api/post", postRouter);
+app.use("/api/posts", postRouter);
 app.use("/api/employer", employerRouter);
 app.use("/api/student", studentRouter);
-app.use("/api/application", applicationRouter);
+app.use("/api/applications", applicationRouter);
 app.use("/api/conversation", conversationRouter);
 app.use("/api/message", messageRouter);
 app.use("/api/user", userRouter);
 app.use("/api/initsocket", socketRouter);
 app.use("/api/upload", uploadFileRouter);
+app.use("/api/generate-presigned-url", presignedUrlRouter);
 
 // Middleware
 app.use(unknownEndpoint);

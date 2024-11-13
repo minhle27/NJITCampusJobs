@@ -32,6 +32,7 @@ const AppRoutes = () => {
         <Routes>
           <Route path="/login" element={user ? <Navigate to="/jobs" /> : <Login />} />
           <Route path="/register" element={user ? <Navigate to="/jobs" /> : <Register />} />
+          <Route path="/" element={user ? <Navigate to="/jobs" /> : <Login />} />
           <Route
             path="/jobs"
             element={

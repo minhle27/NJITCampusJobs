@@ -11,6 +11,7 @@ const conversationController = {
   },
 
   createConversation: async (req: RequestWithUser, res: Response) => {
+    console.log(req.body);
     const newConversation = new conversationModel({
       members: [req.body.senderId, req.body.receiverId],
     });

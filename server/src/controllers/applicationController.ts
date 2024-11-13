@@ -1,30 +1,55 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import applicationModel from "../models/Application";
 import { Response } from "express";
 import fieldValidate from "../utils/fieldValidate";
 import { RequestWithUser } from "../types";
 import studentModel from "../models/Student";
+import { extractPaginationQueryParams } from "../utils/extractPaginationQuery";
+import { offsetPaginate } from "../utils/offsetPaginate";
 
 const applicationController = {
   getStudentApplications: async (req: RequestWithUser, res: Response) => {
-    const applications = await applicationModel
-      .find({
-        student: req.params.id,
-      })
-      .populate({
-        path: "student job",
-      });
-    return res.status(200).json(applications);
+    const studentId = req.params.studentId;
+    const { page, limit, otherParams } = extractPaginationQueryParams(
+      req.query
+    );
+
+    let filter: { [key: string]: unknown } = { student: studentId };
+    if (otherParams.search) {
+      filter = { title: { $regex: otherParams.search, $options: "i" } };
+    }
+
+    const result = await offsetPaginate(applicationModel, filter, page, limit);
+    const populatedResult = await applicationModel.populate(result.data, {
+      path: "student job",
+    });
+    return res.status(200).json({ ...result, data: populatedResult });
   },
 
   getApplicationsByPost: async (req: RequestWithUser, res: Response) => {
-    const applications = await applicationModel
-      .find({
-        job: req.params.id,
-      })
-      .populate({
-        path: "student job",
-      });
-    return res.status(200).json(applications);
+    const jobId = req.params.jobId;
+    const { page, limit, otherParams } = extractPaginationQueryParams(
+      req.query
+    );
+
+    let filter: { [key: string]: unknown } = { job: jobId };
+
+    if (otherParams.status !== 'all') {
+      filter = { ...filter, ...otherParams };
+    } else {
+      delete otherParams.status;
+      filter = { ...filter, ...otherParams };
+    }
+
+    console.log(filter);
+
+    const result = await offsetPaginate(applicationModel, filter, page, limit);
+    const populatedResult = await applicationModel.populate(result.data, {
+      path: "student",
+      select: "classYear email fullName phone major gpa degree profilePicture",
+    });
+
+    return res.status(200).json({ ...result, data: populatedResult });
   },
 
   updateApplicationStatus: async (req: RequestWithUser, res: Response) => {

@@ -6,4 +6,10 @@ import employerController from "../controllers/employerController";
 
 employerRouter.get("/:id", verifyToken, employerController.getEmployer);
 
+employerRouter.patch(
+  "/:id",
+  verifyToken,
+  employerController.updateEmployerProfile
+);
+
 export default employerRouter;

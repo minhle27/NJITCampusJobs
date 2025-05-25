@@ -5,16 +5,28 @@ import fieldValidate from "../utils/fieldValidate";
 import studentModel from "../models/Student";
 import applicationModel from "../models/Application";
 import { RequestWithUser } from "../types";
+import { offsetPaginate } from "../utils/offsetPaginate";
+import { extractPaginationQueryParams } from "../utils/extractPaginationQuery";
 
 const postController = {
   getAllPostsFromAnEmployer: async (req: RequestWithUser, res: Response) => {
-    const employer = await employerModel.findById(req.params.id).populate({
-      path: "jobPosts",
-    });
+    const employerId = req.params.id;
+
+    const employer = await employerModel.findById(req.params.id);
     if (!employer) {
-      return res.status(404).json({ error: "User Not Found" });
+      return res.status(404).json({ error: "Employer Not Found" });
     }
-    return res.status(200).json(employer.jobPosts);
+
+    const { page, limit, otherParams } = extractPaginationQueryParams(req.query);
+
+    let filter: { [key: string]: unknown } = { employer: employerId };
+    if (otherParams.search) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      filter = { ...filter, title: { $regex: otherParams.search, $options: "i" } };
+    }
+
+    const result = await offsetPaginate(jobModel, filter, page, limit);
+    return res.status(200).json(result);
   },
 
   updateAPost: async (req: RequestWithUser, res: Response) => {
@@ -34,7 +46,6 @@ const postController = {
     }
     await jobModel.findByIdAndDelete(req.params.id);
 
-    // delete this post reference in other collections
     await employerModel.updateOne(
       { _id: post.employer },
       { $pull: { jobPosts: post._id } }
@@ -73,23 +84,31 @@ const postController = {
     });
 
     const savedJob = await newJob.save();
+    console.log(savedJob);
     user.jobPosts = user.jobPosts.concat(savedJob._id);
     await user.save();
     return res.status(200).json(savedJob);
   },
 
-  getAllPosts: async (_req: RequestWithUser, res: Response) => {
-    const allJobPosts = await jobModel.find({});
-    if (!allJobPosts) {
-      return res.status(400).json({ error: "Fetching posts failed" });
+  getAllPosts: async (req: RequestWithUser, res: Response) => {
+    const {page, limit, otherParams} = extractPaginationQueryParams(req.query);
+
+    let filter = {};
+
+    if (otherParams.search) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      filter = { title: { $regex: otherParams.search, $options: "i" } };
     }
-    return res.status(200).json(allJobPosts);
+
+    const result = await offsetPaginate(jobModel, filter, page, limit);
+
+    return res.status(200).json(result);
   },
 
   getPost: async (req: RequestWithUser, res: Response) => {
     const post = await jobModel.findById(req.params.id).populate({
       path: "employer",
-      select: "fullName department profilePicture",
+      select: "fullName department email phone profilePicture",
     });
     if (!post) {
       return res.status(400).json({ error: "Post not found" });

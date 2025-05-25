@@ -1,4 +1,4 @@
-import { Application } from "../types";
+import type { Application } from '../types';
 
 export const useApplicationSearch = (
   searchValue: string,

@@ -1,6 +1,8 @@
-import { useAuth } from "./useAuth";
+import { useUser } from './useUser';
 
 export const useGetAccountType = () => {
-  const user = useAuth().user;
+  const { user } = useUser();
+
+
   return user?.accountType;
 };

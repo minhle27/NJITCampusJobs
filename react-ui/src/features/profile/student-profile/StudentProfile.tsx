@@ -17,7 +17,7 @@ const StudentProfile = () => {
 
   return (
     <ProfileLayout
-      header={<ProfileHeader />}
+      header={<ProfileHeader accountType="student" />}
       infoCard={<BasicInfoCard userData={studentData!} />}
       descriptionCard={<ProfileDescriptionCard profileDescription={studentData!.profileDescription} />}
       isLoading={isLoading || !studentData}

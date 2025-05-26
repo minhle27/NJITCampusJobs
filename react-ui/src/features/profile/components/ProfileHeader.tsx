@@ -1,8 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useGetAccountType } from '@/hooks/useGetAccounType';
 
-const ProfileHeader = () => {
-  const accountType = useGetAccountType();
+const ProfileHeader = ({ accountType }: { accountType: string }) => {
 
   return (
     <div className="bg-gradient-to-r from-blue-600 to-purple-500 w-full min-h-48 flex items-center justify-center relative">

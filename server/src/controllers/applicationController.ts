@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import applicationModel from "../models/Application";
 import { Response } from "express";
-import fieldValidate from "../utils/fieldValidate";
-import { RequestWithUser } from "../types";
+import applicationModel from "../models/Application";
 import studentModel from "../models/Student";
+import { RequestWithUser } from "../types";
 import { extractPaginationQueryParams } from "../utils/extractPaginationQuery";
+import fieldValidate from "../utils/fieldValidate";
 import { offsetPaginate } from "../utils/offsetPaginate";
 
 const applicationController = {

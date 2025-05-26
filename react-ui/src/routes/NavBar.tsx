@@ -95,7 +95,7 @@ const NavBar: React.FC = () => {
           </DropdownMenuTrigger>
           <DropdownMenuContent className="mr-4">
             <DropdownMenuItem onClick={() => navigate('/profile/settings')}>Setting</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate('/profile/settings')}>Saved Jobs</DropdownMenuItem>
+            {user?.accountType === 'student' && <DropdownMenuItem onClick={() => navigate('/profile/settings')}>Saved Jobs</DropdownMenuItem>}
             {user?.accountType === 'student' && <DropdownMenuItem>Resume Lists</DropdownMenuItem>}
             <Separator />
             <DropdownMenuItem onClick={handleLogout}>Log Out</DropdownMenuItem>

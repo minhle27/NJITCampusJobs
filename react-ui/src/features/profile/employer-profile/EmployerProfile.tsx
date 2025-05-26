@@ -17,7 +17,7 @@ const EmployerProfile = () => {
   
   return (
     <ProfileLayout
-      header={<ProfileHeader />}
+      header={<ProfileHeader accountType="employer" />}
       infoCard={<BasicInfoCard userData={employerData!} />}
       descriptionCard={<ProfileDescriptionCard profileDescription={employerData!.profileDescription} />}
       isLoading={isLoading || !employerData}

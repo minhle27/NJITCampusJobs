@@ -3,7 +3,7 @@ import type { Row } from '@tanstack/react-table';
 
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { usePermissions } from '@/hooks/usePermissions';
+import { useGetPostByIdQuery } from '@/services/apiSlice';
 
 import ApplicationDetailsDialog from './ApplicationDetailsDialog';
 
@@ -24,11 +25,24 @@ interface ActionsProps {
 const ApplicantTableActions = ({ row }: ActionsProps) => {
   const [openApplicationDialog, setOpenApplicationDialog] = useState(false);
   const { isOwner } = usePermissions();
-  const { employerId } = useParams();
+  const navigate = useNavigate();
+  
+  const jobId = row.original.job;
+  
+  const { data: jobData } = useGetPostByIdQuery(jobId);
+  
+  console.log(jobData);
 
+  const employerId = jobData?.employer.id;
+
+  const handleViewStudentProfile = () => {
+    const studentId = row.original.student.id;
+    navigate(`/students/${studentId}`);
+  };
+  
   return (
     <>
-      {isOwner(employerId!) && (
+      {isOwner(employerId) && (
         <>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -39,7 +53,9 @@ const ApplicantTableActions = ({ row }: ActionsProps) => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem>View student profile</DropdownMenuItem>
+              <DropdownMenuItem onClick={handleViewStudentProfile}>
+                View student profile
+              </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
                   setOpenApplicationDialog(true);

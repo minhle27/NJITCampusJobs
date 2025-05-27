@@ -19,6 +19,10 @@ const applicationController = {
       filter = { title: { $regex: otherParams.search, $options: "i" } };
     }
 
+    if (otherParams.status && otherParams.status !== 'all') {
+      filter = { ...filter, status: otherParams.status };
+    }
+
     const result = await offsetPaginate(applicationModel, filter, page, limit);
     const populatedResult = await applicationModel.populate(result.data, {
       path: "student job",

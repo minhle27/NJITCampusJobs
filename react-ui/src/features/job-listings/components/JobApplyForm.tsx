@@ -55,6 +55,10 @@ const JobApplyForm = ({ open, setOpen, jobData }: JobApplyFormProps) => {
           applicationInfo,
           jobId: jobData.id,
         });
+        toast({
+          title: 'Application submitted successfully!',
+          description: 'You can now view your applications in the "Applications" section',
+        });
         setOpen(false);
       } catch (e) {
         toast({

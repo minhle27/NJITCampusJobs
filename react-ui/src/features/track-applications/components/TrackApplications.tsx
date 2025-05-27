@@ -5,13 +5,15 @@ import { useUser } from '@/hooks/useUser';
 import { useGetStudentApplicationsQuery } from '@/services/apiSlice';
 
 import { AppliedJobsTableColumns } from './AppliedJobsTableColumns';
+import ApplicationStatusFilter from './ApplicationStatusFilter';
 
 const TrackApplications = () => {
   const { user } = useUser();
   const [searchQuery, setSearchQuery] = useState('');
+  const [status, setStatus] = useState('all');
 
   const [pagination, setPagination] = useState({
-    pageIndex: 0, 
+    pageIndex: 0,
     pageSize: 10,
   });
 
@@ -19,7 +21,7 @@ const TrackApplications = () => {
     studentId: user!.id,
     page: pagination.pageIndex + 1,
     limit: pagination.pageSize,
-    filter: { search: searchQuery }
+    filter: { search: searchQuery, status }
   });
 
 
@@ -36,7 +38,7 @@ const TrackApplications = () => {
           setPagination={setPagination}
           pageCount={paginatedPosts?.totalPages || 0}
           columns={AppliedJobsTableColumns}
-          // filter={<JobsTableFilter setSearchQuery={setSearchQuery} />}
+          filter={<ApplicationStatusFilter setStatus={setStatus} />}
         />
       </div>
     </div>

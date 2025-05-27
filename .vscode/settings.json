@@ -1,5 +1,8 @@
 {
-  "eslint.workingDirectories": ["./server", "./react-ui"],
+  "eslint.workingDirectories": [
+    "./server",
+    "./react-ui"
+  ],
   "files.exclude": {
     ".husky": true,
     "node_modules": true,
@@ -22,6 +25,6 @@
     }
   },
   "[typescriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "vscode.typescript-language-features"
   },
 }

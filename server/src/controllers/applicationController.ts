@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import applicationModel from "../models/Application";
 import { Response } from "express";
-import fieldValidate from "../utils/fieldValidate";
-import { RequestWithUser } from "../types";
+import applicationModel from "../models/Application";
 import studentModel from "../models/Student";
+import { RequestWithUser } from "../types";
 import { extractPaginationQueryParams } from "../utils/extractPaginationQuery";
+import fieldValidate from "../utils/fieldValidate";
 import { offsetPaginate } from "../utils/offsetPaginate";
 
 const applicationController = {
@@ -17,6 +17,10 @@ const applicationController = {
     let filter: { [key: string]: unknown } = { student: studentId };
     if (otherParams.search) {
       filter = { title: { $regex: otherParams.search, $options: "i" } };
+    }
+
+    if (otherParams.status && otherParams.status !== 'all') {
+      filter = { ...filter, status: otherParams.status };
     }
 
     const result = await offsetPaginate(applicationModel, filter, page, limit);

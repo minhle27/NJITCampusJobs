@@ -7,8 +7,9 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { useUser } from '@/hooks/useUser';
 import WithType from '@/routes/WithType';
-import { useGetPostByIdQuery } from '@/services/apiSlice';
+import { useGetPostByIdQuery, useGetStudentApplicationsQuery } from '@/services/apiSlice';
 import { formatDate } from '@/utils';
 
 import JobApplyForm from './JobApplyForm';
@@ -17,14 +18,33 @@ const JobDetailsPage = () => {
   const { jobId } = useParams();
   const { toast } = useToast();
   const [openApplyDialog, setOpenApplyDialog] = useState(false);
+  const { user } = useUser();
 
   const navigate = useNavigate();
 
   const { data: jobData, isLoading } = useGetPostByIdQuery(jobId!);
+  
+  // Fetch user's applications to check if they've already applied
+  const { data: userApplications } = useGetStudentApplicationsQuery(
+    {
+      studentId: user?.id || '',
+      page: 1,
+      limit: 1000, // Get all applications to check
+      filter: {}
+    },
+    {
+      skip: !user || user.accountType !== 'student'
+    }
+  );
 
   if (isLoading || !jobData) {
     return <div>Loading</div>;
   }
+
+  // Check if user has already applied for this job
+  const existingApplication = userApplications?.data?.find(
+    application => application.job.id === jobId
+  );
 
   const handleShareClick = () => {
     navigator.clipboard.writeText(location.host + location.pathname + location.search + location.hash);
@@ -32,6 +52,36 @@ const JobDetailsPage = () => {
       title: 'Share this job post',
       description: 'Link copied successfully',
     });
+  };
+
+  const renderApplyButton = () => {
+    if (existingApplication) {
+      return (
+        <Button 
+          className="ml-auto bg-gray-400 cursor-not-allowed" 
+          disabled
+        >
+          Applied on {formatDate(String(existingApplication.createdAt))}
+        </Button>
+      );
+    }
+
+    if (jobData.externalApplication) {
+      return (
+        <Button className="bg-gray-400 ml-auto" onClick={() => setOpenApplyDialog(true)}>
+          Apply Externally
+        </Button>
+      );
+    }
+
+    return (
+      <Button
+        className="ml-auto bg-green-500 hover:bg-green-700"
+        onClick={() => setOpenApplyDialog(true)}
+      >
+        Easy Apply
+      </Button>
+    );
   };
 
   return (
@@ -94,18 +144,7 @@ const JobDetailsPage = () => {
                   </Button>
                 </div>
                 <WithType accountType='student'>
-                  {jobData.externalApplication ? (
-                    <Button className="bg-gray-400 ml-auto" onClick={() => setOpenApplyDialog(true)}>
-                      Apply Externally
-                    </Button>
-                  ) : (
-                    <Button
-                      className="ml-auto bg-green-500 hover:bg-green-700"
-                      onClick={() => setOpenApplyDialog(true)}
-                    >
-                      Easy Apply
-                    </Button>
-                  )}
+                  {renderApplyButton()}
                 </WithType>
               </div>
               <Separator className="my-4" />

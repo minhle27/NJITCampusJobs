@@ -86,12 +86,17 @@ const BasicInfoCard = ({ userData }: InfoCardProps) => {
         )}
       </CardContent>
       <CardFooter className='flex flex-col gap-3'>
-        <Button className="w-full" onClick={handleMessageClick}>
-          Message
-        </Button>
-        <Button className="w-full" variant='outline' onClick={() => navigate(`/dashboard/${userData.id}`)}>
-          See available jobs
-        </Button>
+        {user!.id !== userData.id && (
+          <Button className="w-full" onClick={handleMessageClick}>
+            Message
+          </Button>
+        )}
+        {userData.accountType === 'employer' && (
+          <Button className="w-full" variant='outline' onClick={() => navigate(`/dashboard/${userData.id}`)}>
+            See available jobs
+          </Button>
+        )}
+
       </CardFooter>
     </Card>
   );
